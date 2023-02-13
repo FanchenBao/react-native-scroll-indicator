@@ -1,6 +1,10 @@
+// prettier-ignore
 {
-  "extends": "../tsconfig",
+  "extends": "@tsconfig/react-native/tsconfig.json",     /* Recommended React Native TSConfig base */
   "compilerOptions": {
-    // Avoid expo-cli auto-generating a tsconfig
+    /* Visit https://aka.ms/tsconfig.json to read more about this file */
+
+    /* Completeness */
+    "skipLibCheck": true                                 /* Skip type checking all .d.ts files. */
   }
 }

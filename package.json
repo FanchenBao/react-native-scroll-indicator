@@ -1,7 +1,7 @@
 {
   "name": "@fanchenbao/react-native-scroll-indicator",
   "version": "0.1.0",
-  "description": "test",
+  "description": "A React Native component that offers a customizable scroll indicator for ScrollView and FlatList",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
   "types": "lib/typescript/index.d.ts",
@@ -30,13 +30,14 @@
     "test": "jest",
     "typecheck": "tsc --noEmit",
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
-    "prepack": "bob build",
-    "release": "release-it",
+    "prepare": "cp example/src/react-native-scroll-indicator/* src/ && bob build",
+    "release": "yarn run prepare && release-it",
     "example": "yarn --cwd example",
     "bootstrap": "yarn example && yarn install"
   },
   "keywords": [
     "react-native",
+    "scroll-indicator",
     "ios",
     "android"
   ],
@@ -140,7 +141,10 @@
     "singleQuote": true,
     "tabWidth": 2,
     "trailingComma": "es5",
-    "useTabs": false
+    "useTabs": false,
+    "jsxBracketSameLine": true,
+    "bracketSpacing": false,
+    "arrowParens": "avoid"
   },
   "react-native-builder-bob": {
     "source": "src",
