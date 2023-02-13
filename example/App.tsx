@@ -11,13 +11,20 @@
 
 import * as React from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {ScrollViewIndicator} from './src/react-native-scroll-indicator';
 import lorem from './src/lorem.json';
+import {DemoScrollViewIndicator} from './src/demo/DemoScrollViewIndicator';
+import {DemoFlatListIndicator} from './src/demo/DemoFlatListIndicator';
 
 const App = () => {
   const [hori, setHori] = React.useState(false);
   const [posi, setPosi] = React.useState<string | number>('right');
-  const [indCrazy, setIndCrazy] = React.useState(false);
+  const [ind, setInd] = React.useState('Normal');
+  const [comp, setComp] = React.useState('ScrollView');
+
+  const posiTypesHori = ['left', 'right', 20, 50, 80];
+  const posiTypeVert = ['top', 'bottom', 20, 50, 80];
+  const indTypes = ['Normal', 'Crazy'];
+  const compTypes = ['ScrollView', 'FlatList'];
 
   const isHoriPosiGood = React.useCallback(
     () =>
@@ -41,6 +48,21 @@ const App = () => {
   return (
     <View style={styles.container}>
       <View style={styles.buttonContainer}>
+        <View style={[styles.buttonSubContainer, {flexDirection: 'row'}]}>
+          {compTypes.map(v => (
+            <TouchableOpacity
+              style={[
+                styles.majorButton,
+                {
+                  backgroundColor: v === comp ? 'lightblue' : 'white',
+                },
+              ]}
+              onPress={() => setComp(v)}
+              key={v}>
+              <Text>{v}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
         <View style={styles.buttonSubContainer}>
           <TouchableOpacity
             style={[
@@ -51,7 +73,7 @@ const App = () => {
             <Text>Vertical</Text>
           </TouchableOpacity>
           <View style={styles.minorButtonContainer}>
-            {['left', 'right', 20, 50, 80].map(v => (
+            {posiTypesHori.map(v => (
               <TouchableOpacity
                 style={[
                   styles.minorButton,
@@ -79,7 +101,7 @@ const App = () => {
             <Text>Horizontal</Text>
           </TouchableOpacity>
           <View style={styles.minorButtonContainer}>
-            {['top', 'bottom', 20, 50, 80].map(v => (
+            {posiTypeVert.map(v => (
               <TouchableOpacity
                 style={[
                   styles.minorButton,
@@ -96,43 +118,45 @@ const App = () => {
             ))}
           </View>
         </View>
-        <View style={styles.minorButtonContainer}>
-          <TouchableOpacity
-            style={[
-              styles.majorButton,
-              {
-                backgroundColor: indCrazy ? 'white' : 'lightblue',
-              },
-            ]}
-            onPress={() => setIndCrazy(false)}>
-            <Text>Normal</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[
-              styles.majorButton,
-              {
-                backgroundColor: indCrazy ? 'lightblue' : 'white',
-              },
-            ]}
-            onPress={() => setIndCrazy(true)}>
-            <Text>Crazy</Text>
-          </TouchableOpacity>
+        <View style={[styles.buttonSubContainer, {flexDirection: 'row'}]}>
+          {indTypes.map(v => (
+            <TouchableOpacity
+              style={[
+                styles.majorButton,
+                {
+                  backgroundColor: v === ind ? 'lightblue' : 'white',
+                },
+              ]}
+              onPress={() => setInd(v)}
+              key={v}>
+              <Text>{v}</Text>
+            </TouchableOpacity>
+          ))}
         </View>
       </View>
       <View style={styles.contentContainer}>
         <View
           style={[styles.scrollViewContainer, {height: hori ? '20%' : '100%'}]}>
           {(hori && isHoriPosiGood()) || (!hori && isVertPosiGood()) ? (
-            <ScrollViewIndicator
-              horizontal={hori}
-              position={posi}
-              indStyle={
-                indCrazy ? styles.indStyleCrazy : styles.indStyleNormal
-              }>
-              <View style={styles.scrollContent}>
-                <Text>{hori ? lorem.text.slice(0, 100) : lorem.text}</Text>
-              </View>
-            </ScrollViewIndicator>
+            comp === 'ScrollView' ? (
+              <DemoScrollViewIndicator
+                hori={hori}
+                posi={posi}
+                indStyle={
+                  ind === 'Crazy' ? styles.indStyleCrazy : styles.indStyleNormal
+                }
+                text={hori ? lorem.text.slice(0, 100) : lorem.text}
+              />
+            ) : (
+              <DemoFlatListIndicator
+                hori={hori}
+                posi={posi}
+                indStyle={
+                  ind === 'Crazy' ? styles.indStyleCrazy : styles.indStyleNormal
+                }
+                data={lorem.text.slice(0, hori ? 100 : 800).split('.')}
+              />
+            )
           ) : null}
         </View>
       </View>
@@ -149,18 +173,17 @@ const styles = StyleSheet.create({
     // borderColor: 'red',
   },
   buttonContainer: {
-    flex: 0.5,
+    flex: 0.8,
     justifyContent: 'flex-end',
     alignItems: 'flex-start',
-    borderWidth: 2,
-    borderColor: 'blue',
+    // borderWidth: 2,
+    // borderColor: 'blue',
   },
   buttonSubContainer: {
     marginVertical: 10,
   },
   minorButtonContainer: {
     flexDirection: 'row',
-    // justifyContent: 'space-around'
   },
   contentContainer: {
     flex: 1,
@@ -173,7 +196,6 @@ const styles = StyleSheet.create({
   },
   indStyleNormal: {backgroundColor: 'grey', width: 5, borderRadius: 3},
   indStyleCrazy: {backgroundColor: 'red', width: 60, borderRadius: 50},
-  scrollContent: {padding: 10},
   majorButton: {
     borderWidth: 1,
     borderColor: 'black',
