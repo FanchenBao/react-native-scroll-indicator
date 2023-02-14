@@ -26,25 +26,6 @@ const App = () => {
   const indTypes = ['Normal', 'Crazy'];
   const compTypes = ['ScrollView', 'FlatList'];
 
-  const isHoriPosiGood = React.useCallback(
-    () =>
-      !(hori && typeof posi === 'string' && !['top', 'bottom'].includes(posi)),
-    [hori, posi],
-  );
-  const isVertPosiGood = React.useCallback(
-    () =>
-      !(!hori && typeof posi === 'string' && !['left', 'right'].includes(posi)),
-    [hori, posi],
-  );
-
-  React.useEffect(() => {
-    if (!isHoriPosiGood()) {
-      setPosi('bottom');
-    } else if (!isVertPosiGood()) {
-      setPosi('right');
-    }
-  }, [setPosi, isHoriPosiGood, isVertPosiGood]);
-
   return (
     <View style={styles.container}>
       <View style={styles.buttonContainer}>
@@ -69,7 +50,10 @@ const App = () => {
               styles.majorButton,
               {backgroundColor: hori ? 'white' : 'lightblue'},
             ]}
-            onPress={() => setHori(false)}>
+            onPress={() => {
+              setHori(false);
+              setPosi('');
+            }}>
             <Text>Vertical</Text>
           </TouchableOpacity>
           <View style={styles.minorButtonContainer}>
@@ -97,7 +81,10 @@ const App = () => {
               styles.majorButton,
               {backgroundColor: hori ? 'lightblue' : 'white'},
             ]}
-            onPress={() => setHori(true)}>
+            onPress={() => {
+              setHori(true);
+              setPosi('');
+            }}>
             <Text>Horizontal</Text>
           </TouchableOpacity>
           <View style={styles.minorButtonContainer}>
@@ -137,27 +124,25 @@ const App = () => {
       <View style={styles.contentContainer}>
         <View
           style={[styles.scrollViewContainer, {height: hori ? '20%' : '100%'}]}>
-          {(hori && isHoriPosiGood()) || (!hori && isVertPosiGood()) ? (
-            comp === 'ScrollView' ? (
-              <DemoScrollViewIndicator
-                hori={hori}
-                posi={posi}
-                indStyle={
-                  ind === 'Crazy' ? styles.indStyleCrazy : styles.indStyleNormal
-                }
-                text={hori ? lorem.text.slice(0, 100) : lorem.text}
-              />
-            ) : (
-              <DemoFlatListIndicator
-                hori={hori}
-                posi={posi}
-                indStyle={
-                  ind === 'Crazy' ? styles.indStyleCrazy : styles.indStyleNormal
-                }
-                data={lorem.text.slice(0, hori ? 100 : 800).split('.')}
-              />
-            )
-          ) : null}
+          {comp === 'ScrollView' ? (
+            <DemoScrollViewIndicator
+              hori={hori}
+              posi={posi}
+              indStyle={
+                ind === 'Crazy' ? styles.indStyleCrazy : styles.indStyleNormal
+              }
+              text={hori ? lorem.text.slice(0, 100) : lorem.text}
+            />
+          ) : (
+            <DemoFlatListIndicator
+              hori={hori}
+              posi={posi}
+              indStyle={
+                ind === 'Crazy' ? styles.indStyleCrazy : styles.indStyleNormal
+              }
+              data={lorem.text.slice(0, hori ? 100 : 800).split('.')}
+            />
+          )}
         </View>
       </View>
     </View>

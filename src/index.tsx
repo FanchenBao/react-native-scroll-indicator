@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 /**
  * @format
  */
@@ -5,6 +6,7 @@ import * as React from 'react';
 import {ScrollIndicator} from './ScrollIndicator';
 
 import type {FlatListProps, ScrollViewProps, ViewStyle} from 'react-native';
+import {getDefaultPosition} from './functions';
 
 type ScrollViewPropsT = {
   position?: string | number;
@@ -17,14 +19,10 @@ type ScrollViewPropsT = {
 
 export const ScrollViewIndicator = (props: ScrollViewPropsT) => {
   const {
-    position = 'right',
+    position = '',
     horizontal = false,
     persistenScrollbar = false,
-    indStyle = {
-      backgroundColor: 'grey',
-      width: 5,
-      borderRadius: 3,
-    },
+    indStyle = {},
     scrollViewProps = {},
   } = props;
 
@@ -33,9 +31,14 @@ export const ScrollViewIndicator = (props: ScrollViewPropsT) => {
       target="ScrollView"
       targetProps={scrollViewProps}
       horizontal={horizontal}
-      position={position}
+      position={getDefaultPosition(horizontal, position)}
       persistenScrollbar={persistenScrollbar}
-      indStyle={indStyle}>
+      indStyle={{
+        backgroundColor: 'grey',
+        width: 5,
+        borderRadius: 3,
+        ...indStyle,
+      }}>
       {props.children}
     </ScrollIndicator>
   );
@@ -52,14 +55,10 @@ type FlatListPropsT = {
 export const FlatListIndicator = (props: FlatListPropsT) => {
   const {
     flatListProps,
-    position = 'right',
+    position = '',
     horizontal = false,
     persistenScrollbar = false,
-    indStyle = {
-      backgroundColor: 'grey',
-      width: 5,
-      borderRadius: 3,
-    },
+    indStyle = {},
   } = props;
 
   return (
@@ -67,9 +66,14 @@ export const FlatListIndicator = (props: FlatListPropsT) => {
       target="FlatList"
       targetProps={flatListProps}
       horizontal={horizontal}
-      position={position}
+      position={getDefaultPosition(horizontal, position)}
       persistenScrollbar={persistenScrollbar}
-      indStyle={indStyle}
+      indStyle={{
+        backgroundColor: 'grey',
+        width: 5,
+        borderRadius: 3,
+        ...indStyle,
+      }}
     />
   );
 };

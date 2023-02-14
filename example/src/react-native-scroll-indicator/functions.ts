@@ -30,6 +30,28 @@ const getIndPosition = (
   );
 
 /**
+ * Get default position when it is not supplied by the user
+ * @param horizontal whether the indicator is horizontal
+ * @param position desired position of the indicator, as a percentage of the
+ * container. e.g. 20 means we want to place a vertical indicator's center line
+ * at 20% of the container's width. If user has not specified it, it will have
+ * the value of empty string.
+ * @returns default position if it has not been supplied
+ */
+export const getDefaultPosition = (
+  horizontal: boolean,
+  position: string | number,
+) => {
+  let posi = position;
+  if (horizontal && position === '') {
+    posi = 'bottom';
+  } else if (!horizontal && position === '') {
+    posi = 'right';
+  }
+  return posi;
+};
+
+/**
  * get the style for indicator's location.
  * @param horizontal whether the indicator is horizontal
  * @param position desired position of the indicator, as a percentage of the

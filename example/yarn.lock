@@ -1087,7 +1087,7 @@
 "@fanchenbao/react-native-scroll-indicator@file:../fanchenbao-react-native-scroll-indicator-0.1.0.tgz":
   version "0.1.0"
   resolved "file:../fanchenbao-react-native-scroll-indicator-0.1.0.tgz"
-  integrity sha512-28CVeG1SIgxnUVXcYUv7UpM9BGUwlCJKXjq/dxXUZUEETpW8xrmpPM5QBNR9G+2mBs4AGrEl4+DCyf+yi5UkQA==
+  integrity sha512-zGYJsIPbRq3WBq8YHbkmDyi8igsAT2dj9H4ij78ZBdYOOlrVWkVf1GcI7v7kc8bdiei3DG7meDwRqYjBtuLzYw==
 
 "@hapi/hoek@^9.0.0":
   version "9.3.0"
