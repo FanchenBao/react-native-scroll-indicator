@@ -10,13 +10,14 @@ The central idea of animating a custom scroll indicator is borrowed from [Lord P
 
 If you search for react native scroll indicator on npm, there are more than 10 packages already there. Compared to those, this package has the following advantages:
 
-1. Support both `ScrollView` and `FlatList`
-2. Support both vertical and horizontal scrolling
-3. Support indicator shrinking in iOS when user scrolls beyond the edge
-4. Support `inverted={true}` in `FlatList`
-5. Indicator can be customized just like a regular `View` (e.g. color, width, position, etc.)
-6. Detailed documentation with comprehensive examples
-7. The animation logic of the indicator is well documented in the source code. You can fork the repo and maintain itself. Hint: it does NOT use `PanResponder`.
+* Supports:
+  - Both `ScrollView` and `FlatList`
+  - Both vertical and horizontal scrolling
+  - Indicator shrinking in iOS when user scrolls beyond the edge
+  - `inverted={true}` in `FlatList`
+  - Indicator customization just like a regular `View` (e.g. color, width, position, etc.)
+* Detailed documentation with comprehensive examples
+* The animation logic of the indicator is well documented in the source code. You can fork the repo and maintain it yourself. Hint: it does NOT use `PanResponder`.
 
 ## Installation
 
@@ -193,6 +194,11 @@ The example app is running from [`./example/App.tsx`](./example/App.tsx)
 | scrollViewProps     | ScrollViewProps                      | `{}`                                                   | `ScrollViewIndicator` only. Props to pass to the underlying `ScrollView`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
 | flatListProps       | ScrollViewProps & FlatListProps<any> | **required**                                           | `FlatListIndicator` only. Props to pass to the underlying `FlatList`. This is a required prop, as one must supply `data` and `renderItem` to `FlatList`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
 
+
+
+## Limitations
+
+The package is designed to be a substitute of `ScrollView` and `FlatList` under the most basic usage. Thus, despite allowing any props from `ScrollView` and `FlatList` to be passed to `ScrollViewIndicator` and `FlatListIndicator`, the package has NOT been fully tested on the combination of all the props. It is very likely that some prop combinations would break the custom scroll indicator. If that happens, please raise an issue or suggest a feature request on GitHub.
 
 ## Contributing
 
