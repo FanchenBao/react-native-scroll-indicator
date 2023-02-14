@@ -17,6 +17,7 @@ type PropsT = {
   // the beginning and scroll to the end, without moving beyond the edges on
   // both direction
   diff: number;
+  inverted: boolean; // FlatList only, whether FlatList is inverted
   // styling of the indicator regarding its location
   locStyle: ViewStyle;
   // styling of the indicator itself, e.g. girth, color, etc.
@@ -24,13 +25,14 @@ type PropsT = {
 };
 
 export const Indicator = (props: PropsT) => {
-  const {d, sc, horizontal, indSize, diff, locStyle, indStyle} = props;
+  const {d, sc, horizontal, indSize, diff, inverted, locStyle, indStyle} =
+    props;
 
   // interpolate the distance need to travel by the indicator to translateX or
   // translateY. Note that the max travel distance is diff
   const move = d.interpolate({
     inputRange: [0, diff],
-    outputRange: [0, diff],
+    outputRange: inverted ? [diff, 0] : [0, diff],
     extrapolate: 'extend',
   });
   // interpolate the scale need to shrink by the indicator to scaleX or scaleY.

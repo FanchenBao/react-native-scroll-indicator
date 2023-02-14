@@ -69,6 +69,13 @@ export const ScrollIndicator = (props: PropsT) => {
           horizontal={horizontal}
           indSize={indSize}
           diff={diff}
+          inverted={
+            'inverted' in targetProps
+              ? typeof targetProps.inverted === 'boolean'
+                ? targetProps.inverted
+                : false
+              : false
+          }
           locStyle={getLocStyle(
             horizontal,
             position,

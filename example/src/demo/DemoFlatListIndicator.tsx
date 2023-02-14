@@ -41,6 +41,7 @@ export const DemoFlatListIndicator = (props: PropsT) => {
             <Text>{item}</Text>
           </View>
         ),
+        // inverted: true,
       }}
       horizontal={hori}
       position={posi}

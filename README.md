@@ -2,15 +2,21 @@
 
 A react-native component that offers a customizable scroll indicator for ScrollView and FlatList
 
+## Disclaimer
+
+The central idea of animating a custom scroll indicator is borrowed from [Lord Pooria's SO answer](https://stackoverflow.com/a/57839837/9723036).
+
 ## Why do we need another customizable scroll indicator?
 
 If you search for react native scroll indicator on npm, there are more than 10 packages already there. Compared to those, this package has the following advantages:
 
 1. Support both `ScrollView` and `FlatList`
 2. Support both vertical and horizontal scrolling
-3. Indicator can be customized just like a regular `View` (e.g. color, width, position, etc.)
-4. Detailed documentation with comprehensive examples
-5. The animation logic of the indicator is not complicated and well documented in the source code. You can fork the repo and easily maintain itself. Hint: it does NOT use `PanResponder`.
+3. Support indicator shrinking in iOS when user scrolls beyond the edge
+4. Support `inverted={true}` in `FlatList`
+5. Indicator can be customized just like a regular `View` (e.g. color, width, position, etc.)
+6. Detailed documentation with comprehensive examples
+7. The animation logic of the indicator is well documented in the source code. You can fork the repo and maintain itself. Hint: it does NOT use `PanResponder`.
 
 ## Installation
 
@@ -71,7 +77,7 @@ const App = () => {
 export default App;
 ```
 
-![minimal demo of ScrollViewIndicator]()
+![minimal demo of ScrollViewIndicator](./docs/minimal_scrollview.gif)
 
 ### FlatListIndicator
 
@@ -127,7 +133,7 @@ const App = () => {
 export default App;
 ```
 
-![minimal demo of FlatListIndicator]()
+![minimal demo of FlatListIndicator](./docs/minimal_flatlist.gif)
 
 ## Comprehensive Examples
 
@@ -142,9 +148,11 @@ The comprehensive example takes advantage of the scroll indicator's customizabil
 * 20: `position={20}`
 * 50: `position={50}`
 * 80: `position={80}`
+* Normal: `indStyle={backgroundColor: 'grey', width: 5, borderRadius: 3}`
+* Crazy: `indStyle={backgroundColor: 'red', width: 60, borderRadius: 50}`
 
 
-![comprehensive examples]()
+![comprehensive examples](./docs/comprehensive.gif)
 
 ## Run Comprehensive Examples
 
