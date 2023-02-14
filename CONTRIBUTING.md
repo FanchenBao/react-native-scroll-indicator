@@ -12,15 +12,49 @@ To get started with the project, run `yarn` in the root directory to install the
 yarn
 ```
 
-> While it's possible to use [`npm`](https://github.com/npm/cli), the tooling is built around [`yarn`](https://classic.yarnpkg.com/), so you'll have an easier time if you use `yarn` for development.
-
-While developing, you can run the [example app](/example/) to test your changes. Any changes you make in your library's JavaScript code will be reflected in the example app without a rebuild. If you change any native code, then you'll need to rebuild the example app.
-
-To start the packager:
+Get husky ready
 
 ```sh
-yarn example start
+yarn prepare
 ```
+
+> While it's possible to use [`npm`](https://github.com/npm/cli), the tooling is built around [`yarn`](https://classic.yarnpkg.com/), so you'll have an easier time if you use `yarn` for development.
+
+All development must take place inside the `example` folder. Thus change your work directory there and run:
+
+```sh
+cd example
+npm install
+```
+
+This will install the dependencies for running the example app. It is **CRUCIAL** to note that the source code is located in `example/src/react-native-scroll-indicator/*`, NOT `./src/*`. Regular development should be conducted while the example app is running, because the app can obtain the component directly from `example/src/react-native-scroll-indicator`. Once development is done, one must return to the root folder and build the package:
+
+```sh
+cd ..
+yarn build
+```
+
+The `yarn build` command copies the source code from `example/src/react-native-scroll-indicator/*` to `./src/*` and build the package.
+
+Before releasing the package, one must test whether the package can be successfully installed and used. To do so, we run the following command under root
+
+```sh
+npm pack
+```
+
+This packages the compiled code in a `fanchenbao-react-native-scroll-indicator-x.x.x.tgz` file, where `x.x.x` is the version number. Install it in the `example` folder:
+
+```sh
+cd example
+npm install ../fanchenbao-react-native-scroll-indicator-x.x.x.tgz
+```
+
+Then in the example app, we can use custom scroll indicator by importing it directly from `node_modules`:
+
+```javascript
+import {FlatListIndicator, ScrollViewIndicator} from '@fanchenbao/react-native-scroll-indicator';
+```
+
 
 To run the example app on Android:
 
@@ -32,12 +66,6 @@ To run the example app on iOS:
 
 ```sh
 yarn example ios
-```
-
-To run the example app on Web:
-
-```sh
-yarn example web
 ```
 
 Make sure your code passes TypeScript and ESLint. Run the following to verify:
