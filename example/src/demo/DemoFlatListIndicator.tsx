@@ -24,7 +24,7 @@ export const DemoFlatListIndicator = (props: PropsT) => {
 
   return (
     <FlatListIndicator
-      flatlistProps={{
+      flatListProps={{
         ItemSeparatorComponent: () => (
           <View
             style={{
