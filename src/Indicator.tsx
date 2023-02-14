@@ -20,11 +20,23 @@ type PropsT = {
   // styling of the indicator regarding its location
   locStyle: ViewStyle;
   // styling of the indicator itself, e.g. girth, color, etc.
-  indStyle: ViewStyle;
+  indStyle?: ViewStyle;
 };
 
 export const Indicator = (props: PropsT) => {
-  const {d, sc, horizontal, indSize, diff, locStyle, indStyle} = props;
+  const {
+    d,
+    sc,
+    horizontal,
+    indSize,
+    diff,
+    locStyle,
+    indStyle = {
+      backgroundColor: 'grey',
+      width: 5,
+      borderRadius: 3,
+    },
+  } = props;
 
   // interpolate the distance need to travel by the indicator to translateX or
   // translateY. Note that the max travel distance is diff

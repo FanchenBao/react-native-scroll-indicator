@@ -75,7 +75,6 @@ export const ScrollIndicator = (props: PropsT) => {
             orthSize,
             indStyle.width as number,
           )}
-          indStyle={indStyle}
         />
       )}
       {target === 'FlatList' ? (

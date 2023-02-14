@@ -3,10 +3,14 @@ module.exports = {
   extends: '@react-native-community',
   parser: '@typescript-eslint/parser',
   plugins: ['@typescript-eslint'],
-  rules: {
-    // allow inline styles to facilitate dynamic stying based on some boolean checks
-    'react-native/no-inline-styles': 'off',
-    'no-shadow': 'off',
-    '@typescript-eslint/no-shadow': ['error'],
-  },
+  overrides: [
+    {
+      files: ['*.ts', '*.tsx'],
+      rules: {
+        '@typescript-eslint/no-shadow': ['error'],
+        'no-shadow': 'off',
+        'no-undef': 'off',
+      },
+    },
+  ],
 };

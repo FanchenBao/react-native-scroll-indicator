@@ -28,11 +28,11 @@
   ],
   "scripts": {
     "test": "jest",
-    "typecheck": "tsc --noEmit",
-    "lint": "eslint \"**/*.{js,ts,tsx}\"",
+    "typecheck": "cd example && tsc --noEmit",
+    "lint": "cd example && eslint \"**/*.{js,ts,tsx}\"",
     "build": "cp example/src/react-native-scroll-indicator/* src/ && bob build",
     "prepare": "husky install",
-    "release": "yarn run prepare && release-it",
+    "release": "yarn build && release-it",
     "example": "yarn --cwd example",
     "bootstrap": "yarn example && yarn install"
   },
@@ -125,10 +125,13 @@
       "prettier/prettier": [
         "error",
         {
+          "arrowParens": "avoid",
+          "bracketSameLine": true,
+          "bracketSpacing": false,
           "quoteProps": "consistent",
           "singleQuote": true,
           "tabWidth": 2,
-          "trailingComma": "es5",
+          "trailingComma": "all",
           "useTabs": false
         }
       ]
@@ -142,7 +145,7 @@
     "quoteProps": "consistent",
     "singleQuote": true,
     "tabWidth": 2,
-    "trailingComma": "es5",
+    "trailingComma": "all",
     "useTabs": false,
     "jsxBracketSameLine": true,
     "bracketSpacing": false,
