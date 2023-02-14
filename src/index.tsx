@@ -11,7 +11,7 @@ import {getDefaultPosition} from './functions';
 type ScrollViewPropsT = {
   position?: string | number;
   horizontal?: boolean;
-  persistenScrollbar?: boolean;
+  persistentScrollbar?: boolean;
   indStyle?: ViewStyle;
   scrollViewProps?: ScrollViewProps;
   children?: React.ReactNode | React.ReactNode[];
@@ -21,7 +21,7 @@ export const ScrollViewIndicator = (props: ScrollViewPropsT) => {
   const {
     position = '',
     horizontal = false,
-    persistenScrollbar = false,
+    persistentScrollbar = false,
     indStyle = {},
     scrollViewProps = {},
   } = props;
@@ -32,7 +32,7 @@ export const ScrollViewIndicator = (props: ScrollViewPropsT) => {
       targetProps={scrollViewProps}
       horizontal={horizontal}
       position={getDefaultPosition(horizontal, position)}
-      persistenScrollbar={persistenScrollbar}
+      persistentScrollbar={persistentScrollbar}
       indStyle={{
         backgroundColor: 'grey',
         width: 5,
@@ -48,7 +48,7 @@ type FlatListPropsT = {
   flatListProps: ScrollViewProps & FlatListProps<any>;
   position?: string | number;
   horizontal?: boolean;
-  persistenScrollbar?: boolean;
+  persistentScrollbar?: boolean;
   indStyle?: ViewStyle;
 };
 
@@ -57,7 +57,7 @@ export const FlatListIndicator = (props: FlatListPropsT) => {
     flatListProps,
     position = '',
     horizontal = false,
-    persistenScrollbar = false,
+    persistentScrollbar = false,
     indStyle = {},
   } = props;
 
@@ -67,7 +67,7 @@ export const FlatListIndicator = (props: FlatListPropsT) => {
       targetProps={flatListProps}
       horizontal={horizontal}
       position={getDefaultPosition(horizontal, position)}
-      persistenScrollbar={persistenScrollbar}
+      persistentScrollbar={persistentScrollbar}
       indStyle={{
         backgroundColor: 'grey',
         width: 5,

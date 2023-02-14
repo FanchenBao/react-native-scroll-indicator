@@ -18,7 +18,7 @@ type PropsT = {
   targetProps: ScrollViewProps | (ScrollViewProps & FlatListProps<any>);
   position: string | number; // position of the indicator
   horizontal: boolean; // whether the scrolling direction is horizontal
-  persistenScrollbar: boolean; // whether to persist scroll indicator
+  persistentScrollbar: boolean; // whether to persist scroll indicator
   indStyle: ViewStyle; // style of the scroll indicator
   children?: React.ReactNode | React.ReactNode[]; // used for ScrollView only
 };
@@ -29,7 +29,7 @@ export const ScrollIndicator = (props: PropsT) => {
     targetProps,
     position,
     horizontal,
-    persistenScrollbar,
+    persistentScrollbar,
     indStyle,
   } = props;
 
@@ -62,7 +62,7 @@ export const ScrollIndicator = (props: PropsT) => {
 
   return (
     <>
-      {(persistenScrollbar || indSize < visibleSize) && (
+      {(persistentScrollbar || indSize < visibleSize) && (
         <Indicator
           d={d}
           sc={sc}
