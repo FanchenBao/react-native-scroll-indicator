@@ -116,7 +116,7 @@ We use [release-it](https://github.com/release-it/release-it) to make it easier 
 
 To publish new versions, do the following:
 
-1. Push the feature branch to github and open a pull request
+1. Push the feature branch to github and also set up upstream (`git push -u origin firstname.lastname.some_feature_branch`) and open a pull request
 2. Resolve any issues if exist
 3. **BEFORE** merging the branch to master, run `yarn release` on the local feature branch. This allows `release-it` to access all the commit history from the previous release and automatically decide on the next version and changelog.
 4. After release, merge the pull request to master and squash the commits.

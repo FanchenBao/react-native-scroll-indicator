@@ -138,6 +138,8 @@ export default App;
 
 ## Comprehensive Examples
 
+[**Try it on Snack Expo**](https://snack.expo.dev/@fanchenbao/react-native-scroll-indicator_demo)
+
 The comprehensive example takes advantage of the scroll indicator's customizability. A brief summary of the corresponding props for each option is given below. For details, refer to the Props table.
 
 * Horizontal: `horizontal={true}`
@@ -154,6 +156,7 @@ The comprehensive example takes advantage of the scroll indicator's customizabil
 
 
 ![comprehensive examples](./docs/comprehensive.gif)
+
 
 ## Run Comprehensive Examples
 
