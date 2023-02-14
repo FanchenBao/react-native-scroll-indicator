@@ -169,16 +169,16 @@ Go to the `example` folder and sets up the example app
 npm install
 ```
 
-Then go to the root folder to run the example app for iOS
+While inside the `example` folder, run the app for iOS
 
 ```sh
-yarn example ios
+npm run ios
 ```
 
 or Android
 
 ```sh
-yarn example android
+npm run android
 ```
 
 The example app is running from [`./example/App.tsx`](./example/App.tsx)
