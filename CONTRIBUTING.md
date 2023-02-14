@@ -81,7 +81,8 @@ To fix formatting errors, run the following:
 yarn lint --fix
 ```
 
-Remember to add tests for your change if possible. Run the unit tests by:
+~~Remember to add tests for your change if possible. Run the unit tests by:~~
+No unit test available at the moment
 
 ```sh
 yarn test
@@ -113,11 +114,14 @@ Our pre-commit hooks verify that the linter and tests pass when committing.
 
 We use [release-it](https://github.com/release-it/release-it) to make it easier to publish new versions. It handles common tasks like bumping version based on semver, creating tags and releases etc.
 
-To publish new versions, run the following:
+To publish new versions, do the following:
 
-```sh
-yarn release
-```
+1. Push the feature branch to github and open a pull request
+2. Resolve any issues if exist
+3. **BEFORE** merging the branch to master, run `yarn release` on the local feature branch. This allows `release-it` to access all the commit history from the previous release and automatically decide on the next version and changelog.
+4. After release, merge the pull request to master and squash the commits.
+
+If release on the feature branch is not possible, one can merge the feature branch to master and release from master. HOWEVER, this merge must NOT be squashed. If squashed, `release-it` won't be able to see all the individual commits and will generate incorrect new version and changelog.
 
 ### Scripts
 
