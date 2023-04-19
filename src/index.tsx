@@ -22,7 +22,7 @@ export const ScrollViewIndicator = (props: ScrollViewPropsT) => {
     position = '',
     horizontal = false,
     persistentScrollbar = false,
-    indStyle = {},
+    indStyle: { width = 5, ...indStyle } = {},
     scrollViewProps = {},
   } = props;
 
@@ -35,8 +35,8 @@ export const ScrollViewIndicator = (props: ScrollViewPropsT) => {
       persistentScrollbar={persistentScrollbar}
       indStyle={{
         backgroundColor: 'grey',
-        width: 5,
-        borderRadius: 3,
+        width,
+        borderRadius: width / 2,
         ...indStyle,
       }}>
       {props.children}
@@ -58,7 +58,7 @@ export const FlatListIndicator = (props: FlatListPropsT) => {
     position = '',
     horizontal = false,
     persistentScrollbar = false,
-    indStyle = {},
+    indStyle: { width = 5, ...indStyle } = {},
   } = props;
 
   return (
@@ -70,8 +70,8 @@ export const FlatListIndicator = (props: FlatListPropsT) => {
       persistentScrollbar={persistentScrollbar}
       indStyle={{
         backgroundColor: 'grey',
-        width: 5,
-        borderRadius: 3,
+        width,
+        borderRadius: width / 2,
         ...indStyle,
       }}
     />
