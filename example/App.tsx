@@ -179,8 +179,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'black',
   },
-  indStyleNormal: {backgroundColor: 'grey', width: 5, borderRadius: 3},
-  indStyleCrazy: {backgroundColor: 'red', width: 60, borderRadius: 50},
+  indStyleNormal: {backgroundColor: 'grey', width: 5},
+  indStyleCrazy: {backgroundColor: 'red', width: 60},
   majorButton: {
     borderWidth: 1,
     borderColor: 'black',
