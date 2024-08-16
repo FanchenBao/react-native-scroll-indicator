@@ -9,9 +9,9 @@
  * @format
  */
 import * as React from 'react';
-import {Text, View, ViewStyle} from 'react-native';
-// import {FlatListIndicator} from '../react-native-scroll-indicator';
-import {FlatListIndicator} from '@fanchenbao/react-native-scroll-indicator';
+import { Text, View, ViewStyle } from 'react-native';
+import { FlatListIndicator } from '../react-native-scroll-indicator';
+// import {FlatListIndicator} from '@fanchenbao/react-native-scroll-indicator';
 
 type PropsT = {
   hori: boolean;
@@ -21,7 +21,7 @@ type PropsT = {
 };
 
 export const DemoFlatListIndicator = (props: PropsT) => {
-  const {hori, posi, indStyle, data} = props;
+  const { hori, posi, indStyle, data } = props;
 
   return (
     <FlatListIndicator
@@ -36,8 +36,8 @@ export const DemoFlatListIndicator = (props: PropsT) => {
           />
         ),
         data: data,
-        renderItem: ({item}) => (
-          <View style={{margin: 10}}>
+        renderItem: ({ item }) => (
+          <View style={{ margin: 10 }}>
             <Text>{item}</Text>
           </View>
         ),

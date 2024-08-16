@@ -10,10 +10,10 @@
  */
 
 import * as React from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import lorem from './src/lorem.json';
-import {DemoScrollViewIndicator} from './src/demo/DemoScrollViewIndicator';
-import {DemoFlatListIndicator} from './src/demo/DemoFlatListIndicator';
+import { DemoScrollViewIndicator } from './src/demo/DemoScrollViewIndicator';
+import { DemoFlatListIndicator } from './src/demo/DemoFlatListIndicator';
 
 const App = () => {
   const [hori, setHori] = React.useState(false);
@@ -23,13 +23,13 @@ const App = () => {
 
   const posiTypesHori = ['left', 'right', 20, 50, 80];
   const posiTypeVert = ['top', 'bottom', 20, 50, 80];
-  const indTypes = ['Normal', 'Crazy'];
+  const indTypes = ['Normal', 'Foo'];
   const compTypes = ['ScrollView', 'FlatList'];
 
   return (
     <View style={styles.container}>
       <View style={styles.buttonContainer}>
-        <View style={[styles.buttonSubContainer, {flexDirection: 'row'}]}>
+        <View style={[styles.buttonSubContainer, { flexDirection: 'row' }]}>
           {compTypes.map(v => (
             <TouchableOpacity
               style={[
@@ -48,7 +48,7 @@ const App = () => {
           <TouchableOpacity
             style={[
               styles.majorButton,
-              {backgroundColor: hori ? 'white' : 'lightblue'},
+              { backgroundColor: hori ? 'white' : 'lightblue' },
             ]}
             onPress={() => {
               setHori(false);
@@ -70,7 +70,7 @@ const App = () => {
                 onPress={() => setPosi(v)}
                 disabled={hori}
                 key={v}>
-                <Text style={{color: hori ? 'lightgrey' : 'black'}}>{v}</Text>
+                <Text style={{ color: hori ? 'lightgrey' : 'black' }}>{v}</Text>
               </TouchableOpacity>
             ))}
           </View>
@@ -79,7 +79,7 @@ const App = () => {
           <TouchableOpacity
             style={[
               styles.majorButton,
-              {backgroundColor: hori ? 'lightblue' : 'white'},
+              { backgroundColor: hori ? 'lightblue' : 'white' },
             ]}
             onPress={() => {
               setHori(true);
@@ -100,12 +100,12 @@ const App = () => {
                 onPress={() => setPosi(v)}
                 disabled={!hori}
                 key={v}>
-                <Text style={{color: hori ? 'black' : 'lightgrey'}}>{v}</Text>
+                <Text style={{ color: hori ? 'black' : 'lightgrey' }}>{v}</Text>
               </TouchableOpacity>
             ))}
           </View>
         </View>
-        <View style={[styles.buttonSubContainer, {flexDirection: 'row'}]}>
+        <View style={[styles.buttonSubContainer, { flexDirection: 'row' }]}>
           {indTypes.map(v => (
             <TouchableOpacity
               style={[
@@ -123,7 +123,7 @@ const App = () => {
       </View>
       <View style={styles.contentContainer}>
         <View
-          style={[styles.scrollViewContainer, {height: hori ? '20%' : '100%'}]}>
+          style={[styles.scrollViewContainer, { height: hori ? '20%' : '100%' }]}>
           {comp === 'ScrollView' ? (
             <DemoScrollViewIndicator
               hori={hori}
@@ -179,8 +179,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'black',
   },
-  indStyleNormal: {backgroundColor: 'grey', width: 5},
-  indStyleCrazy: {backgroundColor: 'red', width: 60},
+  indStyleNormal: { backgroundColor: 'grey', width: 5 },
+  indStyleCrazy: { backgroundColor: 'red', width: 60 },
   majorButton: {
     borderWidth: 1,
     borderColor: 'black',
