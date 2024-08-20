@@ -9,9 +9,10 @@ import {
   ViewStyle,
   FlatListProps,
   ScrollViewProps,
+  View,
 } from 'react-native';
-import {Indicator} from './Indicator';
-import {getLocStyle} from './functions';
+import { Indicator } from './Indicator';
+import { getLocStyle } from './functions';
 
 type PropsT = {
   target: 'ScrollView' | 'FlatList';
@@ -42,6 +43,21 @@ export const ScrollIndicator = (props: PropsT) => {
   // the indicator
   const [orthSize, setOrthSize] = React.useState(0);
 
+  // parent view position
+  const parentRef = React.useRef<View>(null);
+  const [parentPos, setParentPos] = React.useState({
+    pageX: 0,
+    pageY: 0,
+    ready: false,
+  });
+
+  // scroll container refs. Use this to manually scroll the scrollable
+  // component when dragging the indicator
+  const scrollRefs = {
+    FlatList: React.useRef<FlatList>(null),
+    ScrollView: React.useRef<ScrollView>(null),
+  };
+
   // height or width of the indicator, if it is vertical or horizontal,
   // respectively. If there is more content than visible on the view, the
   // proportion of indSize to visibleSize is the same as the visibleSize to
@@ -61,33 +77,19 @@ export const ScrollIndicator = (props: PropsT) => {
   const sc = React.useRef(new Animated.Value(1)).current;
 
   return (
-    <>
-      {(persistentScrollbar || indSize < visibleSize) && (
-        <Indicator
-          d={d}
-          sc={sc}
-          horizontal={horizontal}
-          indSize={indSize}
-          diff={diff}
-          inverted={
-            'inverted' in targetProps
-              ? typeof targetProps.inverted === 'boolean'
-                ? targetProps.inverted
-                : false
-              : false
-          }
-          locStyle={getLocStyle(
-            horizontal,
-            position,
-            orthSize,
-            indStyle.width as number,
-          )}
-          indStyle={indStyle}
-        />
-      )}
+    <View
+      ref={parentRef}
+      onLayout={() => {
+        if (parentRef.current) {
+          parentRef.current?.measure((_1, _2, _3, _4, pageX, pageY) => {
+            setParentPos({ pageX: pageX, pageY: pageY, ready: true });
+          });
+        }
+      }}>
       {target === 'FlatList' ? (
         <FlatList
           {...(targetProps as ScrollViewProps & FlatListProps<any>)}
+          ref={scrollRefs.FlatList}
           horizontal={horizontal}
           showsVerticalScrollIndicator={false}
           showsHorizontalScrollIndicator={false}
@@ -113,9 +115,11 @@ export const ScrollIndicator = (props: PropsT) => {
             /**
              * obtain contentOffset, which is the distance from the top or left
              * of the content to the top or left of the scroll view.
-             * contentOffset gets bigger if user scrolls down or right,
+             * contentOffset gets bigger if user scrolls up or left (i.e.
+             * content goes up or left),
              * otherwise smaller. It is possible for contentOffset to be
-             * negative, if user scrolls up or left beyond the edge.
+             * negative, if user scrolls down or right until there is empty
+             * space above or to the left of the content.
              * indicatorOffset is computed similarly to indSize, in which the
              * proportion of the amount of distance to travel by the indicator
              * to the container size is the same as the proportion of the
@@ -164,6 +168,7 @@ export const ScrollIndicator = (props: PropsT) => {
         // The logic for ScrollView is exactly the same as FlatList
         <ScrollView
           {...(targetProps as ScrollViewProps)}
+          ref={scrollRefs.ScrollView}
           horizontal={horizontal}
           showsVerticalScrollIndicator={false}
           showsHorizontalScrollIndicator={false}
@@ -200,6 +205,33 @@ export const ScrollIndicator = (props: PropsT) => {
           {props.children}
         </ScrollView>
       )}
-    </>
+      {(persistentScrollbar || indSize < visibleSize) && parentPos.ready && (
+        <Indicator
+          d={d}
+          sc={sc}
+          horizontal={horizontal}
+          indSize={indSize}
+          diff={diff}
+          inverted={
+            'inverted' in targetProps
+              ? typeof targetProps.inverted === 'boolean'
+                ? targetProps.inverted
+                : false
+              : false
+          }
+          scrollRefs={scrollRefs}
+          contentSize={contentSize}
+          visibleSize={visibleSize}
+          parentPos={parentPos}
+          locStyle={getLocStyle(
+            horizontal,
+            position,
+            orthSize,
+            indStyle.width as number,
+          )}
+          indStyle={indStyle}
+        />
+      )}
+    </View>
   );
 };

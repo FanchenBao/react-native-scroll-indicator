@@ -23,7 +23,7 @@ const App = () => {
 
   const posiTypesHori = ['left', 'right', 20, 50, 80];
   const posiTypeVert = ['top', 'bottom', 20, 50, 80];
-  const indTypes = ['Normal', 'Foo'];
+  const indTypes = ['Normal', 'Crazy'];
   const compTypes = ['ScrollView', 'FlatList'];
 
   return (
