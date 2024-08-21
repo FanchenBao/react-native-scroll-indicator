@@ -72,15 +72,18 @@ export const Indicator = (props: PropsT) => {
   // starts to be dragged. We need this offset to properly compute the
   // indicator offset when it is being dragged.
   const indOffsetOnMove = React.useRef(0);
+  const horizontalRef = React.useRef(false);
+  horizontalRef.current = horizontal;
 
   const pan = React.useRef(new Animated.ValueXY()).current;
-  pan.addListener(({ y }) => {
-    // y is the delta y when the indicator is being dragged. Thus the total
-    // amount of indicator offset is the initial offset plus the delta y.
+  pan.addListener(({ x, y }) => {
+    // x and y is the delta x and delta y when the indicator is being dragged.
+    // Thus the total amount of indicator offset is the initial offset plus the
+    // delta value.
     // Note that we clamp on how much indicator can be dragged. It cannot
     // be dragged beyond the scrollable component
     const indicatorOffset = Math.min(
-      Math.max(y + indOffsetOnMove.current, 0),
+      Math.max((horizontalRef.current ? x : y) + indOffsetOnMove.current, 0),
       diff,
     );
     d.setValue(indicatorOffset);
@@ -98,10 +101,17 @@ export const Indicator = (props: PropsT) => {
         animated: false,
       });
     } else if (scrollRefs.ScrollView.current) {
-      scrollRefs.ScrollView.current.scrollTo({
-        y: contentOffset,
-        animated: false,
-      });
+      scrollRefs.ScrollView.current.scrollTo(
+        horizontalRef.current
+          ? {
+            x: contentOffset,
+            animated: false,
+          }
+          : {
+            y: contentOffset,
+            animated: false,
+          },
+      );
     }
   });
 
@@ -109,10 +119,11 @@ export const Indicator = (props: PropsT) => {
     PanResponder.create({
       onMoveShouldSetPanResponder: () => true,
       onPanResponderGrant: evt => {
-        indOffsetOnMove.current =
-          evt.nativeEvent.pageY - evt.nativeEvent.locationY - parentPos.pageY;
+        indOffsetOnMove.current = horizontalRef.current
+          ? evt.nativeEvent.pageX - evt.nativeEvent.locationX - parentPos.pageX
+          : evt.nativeEvent.pageY - evt.nativeEvent.locationY - parentPos.pageY;
       },
-      onPanResponderMove: Animated.event([null, { dy: pan.y }], {
+      onPanResponderMove: Animated.event([null, { dy: pan.y, dx: pan.x }], {
         useNativeDriver: false,
       }),
     }),

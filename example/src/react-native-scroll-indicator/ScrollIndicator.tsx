@@ -10,6 +10,7 @@ import {
   FlatListProps,
   ScrollViewProps,
   View,
+  StyleSheet,
 } from 'react-native';
 import { Indicator } from './Indicator';
 import { getLocStyle } from './functions';
@@ -79,6 +80,7 @@ export const ScrollIndicator = (props: PropsT) => {
   return (
     <View
       ref={parentRef}
+      style={stylles.parentContainer}
       onLayout={() => {
         if (parentRef.current) {
           parentRef.current?.measure((_1, _2, _3, _4, pageX, pageY) => {
@@ -235,3 +237,9 @@ export const ScrollIndicator = (props: PropsT) => {
     </View>
   );
 };
+
+const stylles = StyleSheet.create({
+  parentContainer: {
+    flex: 1,
+  },
+});
