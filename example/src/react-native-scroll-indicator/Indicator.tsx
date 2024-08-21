@@ -76,12 +76,23 @@ export const Indicator = (props: PropsT) => {
   // starts to be dragged. We need this offset to properly compute the
   // indicator offset when it is being dragged.
   const indOffsetOnMove = React.useRef(0);
-  // Use ref to make prop value available inside animated value listener
-  const horizontalRef = React.useRef(false);
-  horizontalRef.current = horizontal;
-  const invertedRef = React.useRef(false);
-  invertedRef.current = inverted;
-  const actualIndSizeRef = React.useRef(0);
+
+  // Use ref to make values of the props or any value that might be changed
+  // upon refresh available inside animated value callbacks. The values in
+  // animated callbacks do not update upon any state update.
+  const refs = {
+    horizontal: React.useRef(false),
+    inverted: React.useRef(false),
+    actualIndSize: React.useRef(0),
+    diff: React.useRef(0),
+    contentSize: React.useRef(0),
+    visibleSize: React.useRef(0),
+  };
+  refs.horizontal.current = horizontal;
+  refs.inverted.current = inverted;
+  refs.diff.current = diff;
+  refs.contentSize.current = contentSize;
+  refs.visibleSize.current = visibleSize;
 
   const pan = React.useRef(new Animated.ValueXY()).current;
   pan.addListener(({ x, y }) => {
@@ -96,16 +107,16 @@ export const Indicator = (props: PropsT) => {
     // the top or left (bottom or right) of the parent bound.
     const indicatorOffset = Math.min(
       Math.max(
-        (horizontalRef.current
-          ? invertedRef.current
+        (refs.horizontal.current
+          ? refs.inverted.current
             ? -x
             : x
-          : invertedRef.current
+          : refs.inverted.current
             ? -y
             : y) + indOffsetOnMove.current,
         0,
       ),
-      diff,
+      refs.diff.current,
     );
     d.setValue(indicatorOffset);
 
@@ -115,7 +126,8 @@ export const Indicator = (props: PropsT) => {
     // animation. The animation is needed when we supply the end offset to
     // the scrollable component. In the current case, we are not assigning
     // the end offset. Rather, we are assigning the current offset.
-    const contentOffset = (indicatorOffset * contentSize) / visibleSize;
+    const contentOffset =
+      (indicatorOffset * refs.contentSize.current) / refs.visibleSize.current;
     if (scrollRefs.FlatList.current) {
       scrollRefs.FlatList.current.scrollToOffset({
         offset: contentOffset,
@@ -123,7 +135,7 @@ export const Indicator = (props: PropsT) => {
       });
     } else if (scrollRefs.ScrollView.current) {
       scrollRefs.ScrollView.current.scrollTo(
-        horizontalRef.current
+        refs.horizontal.current
           ? {
             x: contentOffset,
             animated: false,
@@ -141,13 +153,15 @@ export const Indicator = (props: PropsT) => {
       onMoveShouldSetPanResponder: () => true,
       onPanResponderGrant: evt => {
         // top or left of indicator to the top or left of parent boundary
-        const indStartToParentStart = horizontalRef.current
+        const indStartToParentStart = refs.horizontal.current
           ? evt.nativeEvent.pageX - evt.nativeEvent.locationX - parentPos.pageX
           : evt.nativeEvent.pageY - evt.nativeEvent.locationY - parentPos.pageY;
         // If inverted, we need to compute the bottom or right of indicator
         // to the bottom or right of parent boundary
-        indOffsetOnMove.current = invertedRef.current
-          ? visibleSize - indStartToParentStart - actualIndSizeRef.current
+        indOffsetOnMove.current = refs.inverted.current
+          ? refs.visibleSize.current -
+          indStartToParentStart -
+          refs.actualIndSize.current
           : indStartToParentStart;
       },
       onPanResponderMove: Animated.event([null, { dy: pan.y, dx: pan.x }], {
@@ -188,7 +202,7 @@ export const Indicator = (props: PropsT) => {
       onLayout={e => {
         // The actual size of the indicator is different from the given indSize
         // due to size changes in the parent components
-        actualIndSizeRef.current = horizontal
+        refs.actualIndSize.current = horizontal
           ? e.nativeEvent.layout.width
           : e.nativeEvent.layout.height;
       }}
