@@ -70,3 +70,79 @@ android/keystores/debug.keystore
 lib/
 
 *.tgz
+
+
+# OSX
+#
+example/.DS_Store
+
+# Xcode
+#
+example/uild/
+example/*.pbxuser
+!example/default.pbxuser
+example/*.mode1v3
+!example/default.mode1v3
+example/*.mode2v3
+!example/default.mode2v3
+example/*.perspectivev3
+!example/default.perspectivev3
+example/xcuserdata
+example/*.xccheckout
+example/*.moved-aside
+example/DerivedData
+example/*.hmap
+example/*.ipa
+example/*.xcuserstate
+example/**/.xcode.env.local
+
+# Android/IntelliJ
+#
+example/build/
+example/.idea
+example/.gradle
+example/local.properties
+example/*.iml
+example/*.hprof
+example/.cxx/
+example/*.keystore
+!example/debug.keystore
+
+# node.js
+#
+example/node_modules/
+example/npm-debug.log
+example/yarn-error.log
+
+# fastlane
+#
+# It is recommended to not store the screenshots in the git repo. Instead, use fastlane to re-generate the
+# screenshots whenever they are needed.
+# For more information about the recommended setup visit:
+# https://docs.fastlane.tools/best-practices/source-control/
+
+example/**/fastlane/report.xml
+example/**/fastlane/Preview.html
+example/**/fastlane/screenshots
+example/**/fastlane/test_output
+
+# Bundle artifact
+example/*.jsbundle
+
+# Ruby / CocoaPods
+example/**/Pods/
+example//vendor/bundle/
+
+# Temporary files created by Metro to check the health of the file watcher
+example/.metro-health-check*
+
+# testing
+example/coverage
+
+# Yarn
+example/.yarn/*
+!example/.yarn/patches
+!example/.yarn/plugins
+!example/.yarn/releases
+!example/.yarn/sdks
+!example/.yarn/versions

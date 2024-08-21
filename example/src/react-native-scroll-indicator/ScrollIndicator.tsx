@@ -9,9 +9,14 @@ import {
   ViewStyle,
   FlatListProps,
   ScrollViewProps,
+  View,
+  StyleSheet,
+  LayoutChangeEvent,
+  NativeSyntheticEvent,
+  NativeScrollEvent,
 } from 'react-native';
-import {Indicator} from './Indicator';
-import {getLocStyle} from './functions';
+import { Indicator } from './Indicator';
+import { getLocStyle } from './functions';
 
 type PropsT = {
   target: 'ScrollView' | 'FlatList';
@@ -42,6 +47,22 @@ export const ScrollIndicator = (props: PropsT) => {
   // the indicator
   const [orthSize, setOrthSize] = React.useState(0);
 
+  // parent view position. Parent view is the component that holds both the
+  // scroll indicator and the scrollable component
+  const parentRef = React.useRef<View>(null);
+  const [parentPos, setParentPos] = React.useState({
+    pageX: 0,
+    pageY: 0,
+    ready: false,
+  });
+
+  // scroll container refs. Use this to manually scroll the scrollable
+  // component when dragging the indicator
+  const scrollRefs = {
+    FlatList: React.useRef<FlatList>(null),
+    ScrollView: React.useRef<ScrollView>(null),
+  };
+
   // height or width of the indicator, if it is vertical or horizontal,
   // respectively. If there is more content than visible on the view, the
   // proportion of indSize to visibleSize is the same as the visibleSize to
@@ -50,6 +71,7 @@ export const ScrollIndicator = (props: PropsT) => {
     contentSize > visibleSize
       ? (visibleSize * visibleSize) / contentSize
       : visibleSize;
+
   // the amount of distance the indicator needs to travel during scrolling
   // without any shrinking
   const diff = visibleSize > indSize ? visibleSize - indSize : 1;
@@ -60,9 +82,120 @@ export const ScrollIndicator = (props: PropsT) => {
   // the scale that the indicator needs to shrink if scrolling beyond the end
   const sc = React.useRef(new Animated.Value(1)).current;
 
+  /****************************************************
+   * Callbacks shared by both Flatlist and Scrollview
+   ****************************************************/
+  const configContentSize = (w: number, h: number) => {
+    // total size of the content
+    setContentSize(horizontal ? w : h);
+  };
+
+  const configVisibleSize = (e: LayoutChangeEvent) => {
+    // layout of the visible part of the scroll view
+    setVisibleSize(
+      horizontal ? e.nativeEvent.layout.width : e.nativeEvent.layout.height,
+    );
+    setOrthSize(
+      horizontal ? e.nativeEvent.layout.height : e.nativeEvent.layout.width,
+    );
+  };
+
+  const configOnScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
+    /**
+     * obtain contentOffset, which is the distance from the top or left
+     * of the content to the top or left of the scroll view.
+     * contentOffset gets bigger if user scrolls up or left (i.e.
+     * content goes up or left),
+     * otherwise smaller. It is possible for contentOffset to be
+     * negative, if user scrolls down or right until there is empty
+     * space above or to the left of the content.
+     * indicatorOffset is computed similarly to indSize, in which the
+     * proportion of the amount of distance to travel by the indicator
+     * to the container size is the same as the proportion of the
+     * container size to total size.
+     */
+    const indicatorOffset =
+      ((horizontal
+        ? e.nativeEvent.contentOffset.x
+        : e.nativeEvent.contentOffset.y) *
+        visibleSize) /
+      contentSize;
+    d.setValue(indicatorOffset);
+    /**
+     * What we desire is that when the indicator touches the edge, it
+     * shrinks in size while maintaining the contact to the edge if
+     * user scrolls in the same direction further.
+     * If we don't move the indicator, after shrinking, there will be a
+     * gap of size
+     *
+     * (indSize - indSize * sc) / 2
+     *
+     * between the end of the indicator and the edge of the container.
+     * To make the end of the indicator maintain contact to the edge,
+     * the indicator must move in the same rate as the gap appears.
+     *
+     * If we scroll down or right, we have the following relationship
+     *
+     * indicatorOffset = diff + (indSize - indSize * sc) / 2
+     *
+     * If we scroll up or left, we have a slightly different
+     * relationship
+     *
+     * indicatorOffset = (indSize - indSize * sc) / 2
+     *
+     * From these two relationship, we can compute sc based on
+     * indicatorOffset.
+     */
+    sc.setValue(
+      indicatorOffset >= 0
+        ? (indSize + 2 * diff - 2 * indicatorOffset) / indSize
+        : (indSize + 2 * indicatorOffset) / indSize,
+    );
+  };
+
   return (
-    <>
-      {(persistentScrollbar || indSize < visibleSize) && (
+    <View
+      ref={parentRef}
+      style={stylles.parentContainer}
+      onLayout={() => {
+        if (parentRef.current) {
+          parentRef.current?.measure((_1, _2, _3, _4, pageX, pageY) => {
+            setParentPos({
+              pageX: pageX,
+              pageY: pageY,
+              ready: true,
+            });
+          });
+        }
+      }}>
+      {target === 'FlatList' ? (
+        <FlatList
+          {...(targetProps as ScrollViewProps & FlatListProps<any>)}
+          ref={scrollRefs.FlatList}
+          horizontal={horizontal}
+          showsVerticalScrollIndicator={false}
+          showsHorizontalScrollIndicator={false}
+          onContentSizeChange={configContentSize}
+          onLayout={configVisibleSize}
+          scrollEventThrottle={16}
+          onScroll={configOnScroll}
+        />
+      ) : (
+        // The logic for ScrollView is exactly the same as FlatList
+        <ScrollView
+          {...(targetProps as ScrollViewProps)}
+          ref={scrollRefs.ScrollView}
+          horizontal={horizontal}
+          showsVerticalScrollIndicator={false}
+          showsHorizontalScrollIndicator={false}
+          onContentSizeChange={configContentSize}
+          onLayout={configVisibleSize}
+          scrollEventThrottle={16}
+          onScroll={configOnScroll}>
+          {props.children}
+        </ScrollView>
+      )}
+      {(persistentScrollbar || indSize < visibleSize) && parentPos.ready && (
         <Indicator
           d={d}
           sc={sc}
@@ -76,6 +209,10 @@ export const ScrollIndicator = (props: PropsT) => {
                 : false
               : false
           }
+          scrollRefs={scrollRefs}
+          contentSize={contentSize}
+          visibleSize={visibleSize}
+          parentPos={parentPos}
           locStyle={getLocStyle(
             horizontal,
             position,
@@ -85,121 +222,12 @@ export const ScrollIndicator = (props: PropsT) => {
           indStyle={indStyle}
         />
       )}
-      {target === 'FlatList' ? (
-        <FlatList
-          {...(targetProps as ScrollViewProps & FlatListProps<any>)}
-          horizontal={horizontal}
-          showsVerticalScrollIndicator={false}
-          showsHorizontalScrollIndicator={false}
-          onContentSizeChange={(w, h) => {
-            // total size of the content
-            setContentSize(horizontal ? w : h);
-          }}
-          onLayout={e => {
-            // layout of the visible part of the scroll view
-            setVisibleSize(
-              horizontal
-                ? e.nativeEvent.layout.width
-                : e.nativeEvent.layout.height,
-            );
-            setOrthSize(
-              horizontal
-                ? e.nativeEvent.layout.height
-                : e.nativeEvent.layout.width,
-            );
-          }}
-          scrollEventThrottle={16}
-          onScroll={e => {
-            /**
-             * obtain contentOffset, which is the distance from the top or left
-             * of the content to the top or left of the scroll view.
-             * contentOffset gets bigger if user scrolls down or right,
-             * otherwise smaller. It is possible for contentOffset to be
-             * negative, if user scrolls up or left beyond the edge.
-             * indicatorOffset is computed similarly to indSize, in which the
-             * proportion of the amount of distance to travel by the indicator
-             * to the container size is the same as the proportion of the
-             * container size to total size.
-             */
-            const indicatorOffset =
-              ((horizontal
-                ? e.nativeEvent.contentOffset.x
-                : e.nativeEvent.contentOffset.y) *
-                visibleSize) /
-              contentSize;
-            d.setValue(indicatorOffset);
-            /**
-             * What we desire is that when the indicator touches the edge, it
-             * shrinks in size while maintaining the contact to the edge if
-             * user scrolls in the same direction further.
-             * If we don't move the indicator, after shrinking, there will be a
-             * gap of size
-             *
-             * (indSize - indSize * sc) / 2
-             *
-             * between the end of the indicator and the edge of the container.
-             * To make the end of the indicator maintain contact to the edge,
-             * the indicator must move in the same rate as the gap appears.
-             *
-             * If we scroll down or right, we have the following relationship
-             *
-             * indicatorOffset = diff + (indSize - indSize * sc) / 2
-             *
-             * If we scroll up or left, we have a slightly different
-             * relationship
-             *
-             * indicatorOffset = (indSize - indSize * sc) / 2
-             *
-             * From these two relationship, we can compute sc based on
-             * indicatorOffset.
-             */
-            sc.setValue(
-              indicatorOffset >= 0
-                ? (indSize + 2 * diff - 2 * indicatorOffset) / indSize
-                : (indSize + 2 * indicatorOffset) / indSize,
-            );
-          }}
-        />
-      ) : (
-        // The logic for ScrollView is exactly the same as FlatList
-        <ScrollView
-          {...(targetProps as ScrollViewProps)}
-          horizontal={horizontal}
-          showsVerticalScrollIndicator={false}
-          showsHorizontalScrollIndicator={false}
-          onContentSizeChange={(w, h) => {
-            setContentSize(horizontal ? w : h);
-          }}
-          onLayout={e => {
-            setVisibleSize(
-              horizontal
-                ? e.nativeEvent.layout.width
-                : e.nativeEvent.layout.height,
-            );
-            setOrthSize(
-              horizontal
-                ? e.nativeEvent.layout.height
-                : e.nativeEvent.layout.width,
-            );
-          }}
-          scrollEventThrottle={16}
-          onScroll={e => {
-            const indicatorOffset =
-              ((horizontal
-                ? e.nativeEvent.contentOffset.x
-                : e.nativeEvent.contentOffset.y) *
-                visibleSize) /
-              contentSize;
-            d.setValue(indicatorOffset);
-            sc.setValue(
-              indicatorOffset >= 0
-                ? (indSize + 2 * diff - 2 * indicatorOffset) / indSize
-                : (indSize + 2 * indicatorOffset) / indSize,
-            );
-          }}>
-          {props.children}
-        </ScrollView>
-      )}
-    </>
+    </View>
   );
 };
+
+const stylles = StyleSheet.create({
+  parentContainer: {
+    flex: 1,
+  },
+});

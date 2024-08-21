@@ -10,16 +10,17 @@
  */
 
 import * as React from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import lorem from './src/lorem.json';
-import {DemoScrollViewIndicator} from './src/demo/DemoScrollViewIndicator';
-import {DemoFlatListIndicator} from './src/demo/DemoFlatListIndicator';
+import { DemoScrollViewIndicator } from './src/demo/DemoScrollViewIndicator';
+import { DemoFlatListIndicator } from './src/demo/DemoFlatListIndicator';
 
 const App = () => {
   const [hori, setHori] = React.useState(false);
   const [posi, setPosi] = React.useState<string | number>('right');
   const [ind, setInd] = React.useState('Normal');
   const [comp, setComp] = React.useState('ScrollView');
+  const [inverted, setInverted] = React.useState(false);
 
   const posiTypesHori = ['left', 'right', 20, 50, 80];
   const posiTypeVert = ['top', 'bottom', 20, 50, 80];
@@ -29,7 +30,7 @@ const App = () => {
   return (
     <View style={styles.container}>
       <View style={styles.buttonContainer}>
-        <View style={[styles.buttonSubContainer, {flexDirection: 'row'}]}>
+        <View style={[styles.buttonSubContainer, { flexDirection: 'row' }]}>
           {compTypes.map(v => (
             <TouchableOpacity
               style={[
@@ -48,7 +49,7 @@ const App = () => {
           <TouchableOpacity
             style={[
               styles.majorButton,
-              {backgroundColor: hori ? 'white' : 'lightblue'},
+              { backgroundColor: hori ? 'white' : 'lightblue' },
             ]}
             onPress={() => {
               setHori(false);
@@ -70,7 +71,7 @@ const App = () => {
                 onPress={() => setPosi(v)}
                 disabled={hori}
                 key={v}>
-                <Text style={{color: hori ? 'lightgrey' : 'black'}}>{v}</Text>
+                <Text style={{ color: hori ? 'lightgrey' : 'black' }}>{v}</Text>
               </TouchableOpacity>
             ))}
           </View>
@@ -79,7 +80,7 @@ const App = () => {
           <TouchableOpacity
             style={[
               styles.majorButton,
-              {backgroundColor: hori ? 'lightblue' : 'white'},
+              { backgroundColor: hori ? 'lightblue' : 'white' },
             ]}
             onPress={() => {
               setHori(true);
@@ -100,12 +101,12 @@ const App = () => {
                 onPress={() => setPosi(v)}
                 disabled={!hori}
                 key={v}>
-                <Text style={{color: hori ? 'black' : 'lightgrey'}}>{v}</Text>
+                <Text style={{ color: hori ? 'black' : 'lightgrey' }}>{v}</Text>
               </TouchableOpacity>
             ))}
           </View>
         </View>
-        <View style={[styles.buttonSubContainer, {flexDirection: 'row'}]}>
+        <View style={[styles.buttonSubContainer, { flexDirection: 'row' }]}>
           {indTypes.map(v => (
             <TouchableOpacity
               style={[
@@ -120,10 +121,35 @@ const App = () => {
             </TouchableOpacity>
           ))}
         </View>
+        <View style={styles.buttonSubContainer}>
+          <TouchableOpacity
+            style={[
+              styles.majorButton,
+              {
+                backgroundColor:
+                  comp === 'ScrollView'
+                    ? 'white'
+                    : inverted
+                      ? 'lightblue'
+                      : 'white',
+                borderColor:
+                  comp === 'ScrollView'
+                    ? 'lightgrey'
+                    : styles.majorButton.borderColor,
+              },
+            ]}
+            disabled={comp === 'ScrollView'}
+            onPress={() => setInverted(!inverted)}>
+            <Text
+              style={{ color: comp === 'ScrollView' ? 'lightgrey' : 'black' }}>
+              Inverted
+            </Text>
+          </TouchableOpacity>
+        </View>
       </View>
       <View style={styles.contentContainer}>
         <View
-          style={[styles.scrollViewContainer, {height: hori ? '20%' : '100%'}]}>
+          style={[styles.scrollViewContainer, { height: hori ? '20%' : '100%' }]}>
           {comp === 'ScrollView' ? (
             <DemoScrollViewIndicator
               hori={hori}
@@ -137,6 +163,7 @@ const App = () => {
             <DemoFlatListIndicator
               hori={hori}
               posi={posi}
+              inverted={inverted}
               indStyle={
                 ind === 'Crazy' ? styles.indStyleCrazy : styles.indStyleNormal
               }
@@ -171,7 +198,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   contentContainer: {
-    flex: 1,
+    height: 300,
     marginHorizontal: 30,
     marginVertical: 30,
   },
@@ -179,8 +206,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'black',
   },
-  indStyleNormal: {backgroundColor: 'grey', width: 5},
-  indStyleCrazy: {backgroundColor: 'red', width: 60},
+  indStyleNormal: { backgroundColor: 'grey', width: 5 },
+  indStyleCrazy: { backgroundColor: 'red', width: 40 },
   majorButton: {
     borderWidth: 1,
     borderColor: 'black',

@@ -3,10 +3,10 @@
  * @format
  */
 import * as React from 'react';
-import {ScrollIndicator} from './ScrollIndicator';
+import { ScrollIndicator } from './ScrollIndicator';
 
-import type {FlatListProps, ScrollViewProps, ViewStyle} from 'react-native';
-import {getDefaultPosition} from './functions';
+import type { FlatListProps, ScrollViewProps, ViewStyle } from 'react-native';
+import { getDefaultPosition } from './functions';
 
 type ScrollViewPropsT = {
   position?: string | number;
@@ -22,7 +22,7 @@ export const ScrollViewIndicator = (props: ScrollViewPropsT) => {
     position = '',
     horizontal = false,
     persistentScrollbar = false,
-    indStyle: {width = 5, ...indStyle} = {},
+    indStyle: { width = 5, ...indStyle } = {},
     scrollViewProps = {},
   } = props;
 
@@ -58,7 +58,7 @@ export const FlatListIndicator = (props: FlatListPropsT) => {
     position = '',
     horizontal = false,
     persistentScrollbar = false,
-    indStyle: {width = 5, ...indStyle} = {},
+    indStyle: { width = 5, ...indStyle } = {},
   } = props;
 
   return (
