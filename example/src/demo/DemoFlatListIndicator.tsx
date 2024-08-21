@@ -16,12 +16,13 @@ import { FlatListIndicator } from '../react-native-scroll-indicator';
 type PropsT = {
   hori: boolean;
   posi: string | number;
+  inverted: boolean;
   indStyle: ViewStyle;
   data: Array<string>;
 };
 
 export const DemoFlatListIndicator = (props: PropsT) => {
-  const { hori, posi, indStyle, data } = props;
+  const { hori, posi, inverted, indStyle, data } = props;
 
   return (
     <FlatListIndicator
@@ -41,7 +42,7 @@ export const DemoFlatListIndicator = (props: PropsT) => {
             <Text>{item}</Text>
           </View>
         ),
-        // inverted: true,
+        inverted: inverted,
       }}
       horizontal={hori}
       position={posi}

@@ -41,8 +41,12 @@ type PropsT = {
 
   visibleSize: number; // size of the visible portion of the content
 
-  // coordinate of the view that contains the content and the indicator
-  parentPos: { pageX: number; pageY: number; ready: boolean };
+  // Coordinate of the view that contains the content and the indicator
+  parentPos: {
+    pageX: number;
+    pageY: number;
+    ready: boolean;
+  };
 
   // styling of the indicator regarding its location
   locStyle: ViewStyle;
@@ -72,8 +76,12 @@ export const Indicator = (props: PropsT) => {
   // starts to be dragged. We need this offset to properly compute the
   // indicator offset when it is being dragged.
   const indOffsetOnMove = React.useRef(0);
+  // Use ref to make prop value available inside animated value listener
   const horizontalRef = React.useRef(false);
   horizontalRef.current = horizontal;
+  const invertedRef = React.useRef(false);
+  invertedRef.current = inverted;
+  const actualIndSizeRef = React.useRef(0);
 
   const pan = React.useRef(new Animated.ValueXY()).current;
   pan.addListener(({ x, y }) => {
@@ -82,8 +90,21 @@ export const Indicator = (props: PropsT) => {
     // delta value.
     // Note that we clamp on how much indicator can be dragged. It cannot
     // be dragged beyond the scrollable component
+    // Also note that when Flatlist is inverted, so is the delta value, because
+    // we want to keep indicatorOffset always positive. It always increases
+    // as the top or left (bottom or right) of the indicator moves away from
+    // the top or left (bottom or right) of the parent bound.
     const indicatorOffset = Math.min(
-      Math.max((horizontalRef.current ? x : y) + indOffsetOnMove.current, 0),
+      Math.max(
+        (horizontalRef.current
+          ? invertedRef.current
+            ? -x
+            : x
+          : invertedRef.current
+            ? -y
+            : y) + indOffsetOnMove.current,
+        0,
+      ),
       diff,
     );
     d.setValue(indicatorOffset);
@@ -119,9 +140,15 @@ export const Indicator = (props: PropsT) => {
     PanResponder.create({
       onMoveShouldSetPanResponder: () => true,
       onPanResponderGrant: evt => {
-        indOffsetOnMove.current = horizontalRef.current
+        // top or left of indicator to the top or left of parent boundary
+        const indStartToParentStart = horizontalRef.current
           ? evt.nativeEvent.pageX - evt.nativeEvent.locationX - parentPos.pageX
           : evt.nativeEvent.pageY - evt.nativeEvent.locationY - parentPos.pageY;
+        // If inverted, we need to compute the bottom or right of indicator
+        // to the bottom or right of parent boundary
+        indOffsetOnMove.current = invertedRef.current
+          ? visibleSize - indStartToParentStart - actualIndSizeRef.current
+          : indStartToParentStart;
       },
       onPanResponderMove: Animated.event([null, { dy: pan.y, dx: pan.x }], {
         useNativeDriver: false,
@@ -157,6 +184,13 @@ export const Indicator = (props: PropsT) => {
         transform: horizontal
           ? [{ translateX: move }, { scaleX: shrink }]
           : [{ translateY: move }, { scaleY: shrink }],
+      }}
+      onLayout={e => {
+        // The actual size of the indicator is different from the given indSize
+        // due to size changes in the parent components
+        actualIndSizeRef.current = horizontal
+          ? e.nativeEvent.layout.width
+          : e.nativeEvent.layout.height;
       }}
       {...panResponder.panHandlers}
     />

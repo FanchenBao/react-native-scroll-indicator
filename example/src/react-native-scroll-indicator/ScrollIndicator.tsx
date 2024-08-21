@@ -84,7 +84,11 @@ export const ScrollIndicator = (props: PropsT) => {
       onLayout={() => {
         if (parentRef.current) {
           parentRef.current?.measure((_1, _2, _3, _4, pageX, pageY) => {
-            setParentPos({ pageX: pageX, pageY: pageY, ready: true });
+            setParentPos({
+              pageX: pageX,
+              pageY: pageY,
+              ready: true,
+            });
           });
         }
       }}>

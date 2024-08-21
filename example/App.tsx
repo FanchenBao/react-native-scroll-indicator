@@ -20,6 +20,7 @@ const App = () => {
   const [posi, setPosi] = React.useState<string | number>('right');
   const [ind, setInd] = React.useState('Normal');
   const [comp, setComp] = React.useState('ScrollView');
+  const [inverted, setInverted] = React.useState(false);
 
   const posiTypesHori = ['left', 'right', 20, 50, 80];
   const posiTypeVert = ['top', 'bottom', 20, 50, 80];
@@ -120,6 +121,31 @@ const App = () => {
             </TouchableOpacity>
           ))}
         </View>
+        <View style={styles.buttonSubContainer}>
+          <TouchableOpacity
+            style={[
+              styles.majorButton,
+              {
+                backgroundColor:
+                  comp === 'ScrollView'
+                    ? 'white'
+                    : inverted
+                      ? 'lightblue'
+                      : 'white',
+                borderColor:
+                  comp === 'ScrollView'
+                    ? 'lightgrey'
+                    : styles.majorButton.borderColor,
+              },
+            ]}
+            disabled={comp === 'ScrollView'}
+            onPress={() => setInverted(!inverted)}>
+            <Text
+              style={{ color: comp === 'ScrollView' ? 'lightgrey' : 'black' }}>
+              Inverted
+            </Text>
+          </TouchableOpacity>
+        </View>
       </View>
       <View style={styles.contentContainer}>
         <View
@@ -137,6 +163,7 @@ const App = () => {
             <DemoFlatListIndicator
               hori={hori}
               posi={posi}
+              inverted={inverted}
               indStyle={
                 ind === 'Crazy' ? styles.indStyleCrazy : styles.indStyleNormal
               }
@@ -171,7 +198,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   contentContainer: {
-    flex: 1,
+    height: 300,
     marginHorizontal: 30,
     marginVertical: 30,
   },
@@ -180,7 +207,7 @@ const styles = StyleSheet.create({
     borderColor: 'black',
   },
   indStyleNormal: { backgroundColor: 'grey', width: 5 },
-  indStyleCrazy: { backgroundColor: 'red', width: 60 },
+  indStyleCrazy: { backgroundColor: 'red', width: 40 },
   majorButton: {
     borderWidth: 1,
     borderColor: 'black',
