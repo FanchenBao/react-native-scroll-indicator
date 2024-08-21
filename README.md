@@ -81,8 +81,7 @@ const App = () => {
 export default App;
 ```
 
-https://github.com/user-attachments/assets/06cfb18e-3974-413c-a932-33ea33209046
-
+![Minimal ScrollView Demo](./docs/minimal_scrollview.gif)
 
 ### FlatListIndicator
 
@@ -140,8 +139,7 @@ const App = () => {
 export default App;
 ```
 
-https://github.com/user-attachments/assets/015657df-fa1e-4c0d-9003-c8a4db639f88
-
+![Minimal FlatList Demo](./docs/minimal_flatlist.gif)
 
 ## Comprehensive Examples
 
@@ -161,7 +159,7 @@ The comprehensive example takes advantage of the scroll indicator's customizabil
 - Normal: `indStyle={backgroundColor: 'grey', width: 5}`
 - Crazy: `indStyle={backgroundColor: 'red', width: 40}`
 
-https://github.com/user-attachments/assets/a11732f6-ff43-4c51-9486-7478e66a1bb2
+![Comprehensive Demo](./docs/comprehensive.gif)
 
 ## Run Comprehensive Examples
 
