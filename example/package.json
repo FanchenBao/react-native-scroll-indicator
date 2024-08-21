@@ -11,6 +11,7 @@
     "clean": "react-native-clean-project"
   },
   "dependencies": {
+    "@fanchenbao/react-native-scroll-indicator": "file:../fanchenbao-react-native-scroll-indicator-0.2.2.tgz",
     "react": "18.3.1",
     "react-native": "0.75.1"
   },

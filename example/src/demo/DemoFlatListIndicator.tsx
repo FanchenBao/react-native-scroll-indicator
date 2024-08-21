@@ -10,8 +10,8 @@
  */
 import * as React from 'react';
 import { Text, View, ViewStyle } from 'react-native';
-import { FlatListIndicator } from '../react-native-scroll-indicator';
-// import {FlatListIndicator} from '@fanchenbao/react-native-scroll-indicator';
+// import { FlatListIndicator } from '../react-native-scroll-indicator';
+import { FlatListIndicator } from '@fanchenbao/react-native-scroll-indicator';
 
 type PropsT = {
   hori: boolean;
