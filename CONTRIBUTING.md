@@ -51,10 +51,19 @@ npm install ../fanchenbao-react-native-scroll-indicator-x.x.x.tgz
 
 Then in the example app, we can use custom scroll indicator by importing it directly from `node_modules`:
 
+In file `example/src/demo/DemoFlatListIndicator.tsx`, use
+
 ```javascript
-import {FlatListIndicator, ScrollViewIndicator} from '@fanchenbao/react-native-scroll-indicator';
+// import { FlatListIndicator } from '../react-native-scroll-indicator';
+import {FlatListIndicator} from '@fanchenbao/react-native-scroll-indicator';
 ```
 
+In file `example/src/demo/DemoScrollViewIndicator.tsx`, use
+
+```javascript
+// import { ScrollViewIndicator } from '../react-native-scroll-indicator';
+import {ScrollViewIndicator} from '@fanchenbao/react-native-scroll-indicator';
+```
 
 To run the example app on Android:
 
@@ -87,7 +96,6 @@ No unit test available at the moment
 ```sh
 yarn test
 ```
-
 
 ### Commit message convention
 
