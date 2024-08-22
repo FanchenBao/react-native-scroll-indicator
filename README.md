@@ -1,4 +1,4 @@
-# New Document# @fanchenbao/react-native-scroll-indicator
+# @fanchenbao/react-native-scroll-indicator
 
 A react-native component that offers a customizable scroll indicator for ScrollView and FlatList
 
