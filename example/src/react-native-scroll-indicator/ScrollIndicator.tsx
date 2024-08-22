@@ -177,9 +177,25 @@ export const ScrollIndicator = (props: PropsT) => {
           showsVerticalScrollIndicator={false}
           showsHorizontalScrollIndicator={false}
           onContentSizeChange={configContentSize}
-          onLayout={configVisibleSize}
+          onLayout={e => {
+            configVisibleSize(e);
+            if (
+              'onLayout' in targetProps &&
+              typeof targetProps.onLayout === 'function'
+            ) {
+              targetProps.onLayout(e);
+            }
+          }}
           scrollEventThrottle={16}
-          onScroll={configOnScroll}
+          onScroll={e => {
+            configOnScroll(e);
+            if (
+              'onScroll' in targetProps &&
+              typeof targetProps.onScroll === 'function'
+            ) {
+              targetProps.onScroll(e);
+            }
+          }}
         />
       ) : (
         // The logic for ScrollView is exactly the same as FlatList
@@ -190,9 +206,25 @@ export const ScrollIndicator = (props: PropsT) => {
           showsVerticalScrollIndicator={false}
           showsHorizontalScrollIndicator={false}
           onContentSizeChange={configContentSize}
-          onLayout={configVisibleSize}
+          onLayout={e => {
+            configVisibleSize(e);
+            if (
+              'onLayout' in targetProps &&
+              typeof targetProps.onLayout === 'function'
+            ) {
+              targetProps.onLayout(e);
+            }
+          }}
           scrollEventThrottle={16}
-          onScroll={configOnScroll}>
+          onScroll={e => {
+            configOnScroll(e);
+            if (
+              'onScroll' in targetProps &&
+              typeof targetProps.onScroll === 'function'
+            ) {
+              targetProps.onScroll(e);
+            }
+          }}>
           {props.children}
         </ScrollView>
       )}
