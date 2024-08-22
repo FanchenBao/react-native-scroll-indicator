@@ -41,10 +41,7 @@ export const ScrollViewIndicator = (props: ScrollViewPropsT) => {
         borderRadius: (width as number) / 2,
         ...indStyle,
       }}
-      containerStyle={{
-        flex: 1,
-        ...containerStyle,
-      }}>
+      containerStyle={containerStyle}>
       {props.children}
     </ScrollIndicator>
   );
@@ -82,10 +79,7 @@ export const FlatListIndicator = (props: FlatListPropsT) => {
         borderRadius: (width as number) / 2,
         ...indStyle,
       }}
-      containerStyle={{
-        flex: 1,
-        ...containerStyle,
-      }}
+      containerStyle={containerStyle}
     />
   );
 };
