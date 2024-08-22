@@ -10,19 +10,20 @@
  */
 import * as React from 'react';
 import { Text, View, ViewStyle } from 'react-native';
-// import { FlatListIndicator } from '../react-native-scroll-indicator';
-import { FlatListIndicator } from '@fanchenbao/react-native-scroll-indicator';
+import { FlatListIndicator } from '../react-native-scroll-indicator';
+// import { FlatListIndicator } from '@fanchenbao/react-native-scroll-indicator';
 
 type PropsT = {
   hori: boolean;
   posi: string | number;
   inverted: boolean;
   indStyle: ViewStyle;
+  containerStyle: ViewStyle;
   data: Array<string>;
 };
 
 export const DemoFlatListIndicator = (props: PropsT) => {
-  const { hori, posi, inverted, indStyle, data } = props;
+  const { hori, posi, inverted, indStyle, containerStyle, data } = props;
 
   return (
     <FlatListIndicator
@@ -47,6 +48,7 @@ export const DemoFlatListIndicator = (props: PropsT) => {
       horizontal={hori}
       position={posi}
       indStyle={indStyle}
+      containerStyle={containerStyle}
     />
   );
 };

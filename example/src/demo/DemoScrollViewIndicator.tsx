@@ -10,21 +10,26 @@
  */
 import * as React from 'react';
 import { Text, View, ViewStyle } from 'react-native';
-// import { ScrollViewIndicator } from '../react-native-scroll-indicator';
-import { ScrollViewIndicator } from '@fanchenbao/react-native-scroll-indicator';
+import { ScrollViewIndicator } from '../react-native-scroll-indicator';
+// import { ScrollViewIndicator } from '@fanchenbao/react-native-scroll-indicator';
 
 type PropsT = {
   hori: boolean;
   posi: string | number;
   indStyle: ViewStyle;
+  containerStyle: ViewStyle;
   text: string;
 };
 
 export const DemoScrollViewIndicator = (props: PropsT) => {
-  const { hori, posi, indStyle, text } = props;
+  const { hori, posi, indStyle, containerStyle, text } = props;
 
   return (
-    <ScrollViewIndicator horizontal={hori} position={posi} indStyle={indStyle}>
+    <ScrollViewIndicator
+      horizontal={hori}
+      position={posi}
+      indStyle={indStyle}
+      containerStyle={containerStyle}>
       <View style={{ padding: 10 }}>
         <Text>{text}</Text>
       </View>
