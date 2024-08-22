@@ -1147,10 +1147,10 @@
   resolved "https://registry.npmjs.org/@eslint/js/-/js-8.57.0.tgz"
   integrity sha512-Ys+3g2TaW7gADOJzPt83SJtCDhMjndcDMFVQ/Tj9iA1BfJzFKD9mAUXT3OenpuPHbI6P/myECxRJrofUsDx/5g==
 
-"@fanchenbao/react-native-scroll-indicator@file:../fanchenbao-react-native-scroll-indicator-0.2.2.tgz":
-  version "0.2.2"
-  resolved "file:../fanchenbao-react-native-scroll-indicator-0.2.2.tgz"
-  integrity sha512-0v2sjA1wXZHS1kRERgGN3ORc5h0Mb4AjB7x7Jx2DhLD8qlZPQsUs2F3HYfoT1IQ2Jrgf0FHxX0w8BgowF6ouow==
+"@fanchenbao/react-native-scroll-indicator@file:../fanchenbao-react-native-scroll-indicator-0.3.2.tgz":
+  version "0.3.2"
+  resolved "file:../fanchenbao-react-native-scroll-indicator-0.3.2.tgz"
+  integrity sha512-3R3dQs2hW6bXxqyI3pM3ll90JPnJo1KuV416IknPaVH5U/ACRRlrIgmSDi6qdQoDWQr9hzz8FzBcS7KDRYnChg==
 
 "@hapi/hoek@^9.0.0", "@hapi/hoek@^9.3.0":
   version "9.3.0"
