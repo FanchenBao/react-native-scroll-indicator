@@ -44,16 +44,6 @@ export const DemoFlatListIndicator = (props: PropsT) => {
           </View>
         ),
         inverted: inverted,
-        onLayout: e =>
-          console.log(
-            `flatListProps onLayout: ${JSON.stringify(e.nativeEvent.layout)}`,
-          ),
-        onScroll: e =>
-          console.log(
-            `flatlistProps onScroll: ${JSON.stringify(
-              e.nativeEvent.contentOffset,
-            )}`,
-          ),
       }}
       horizontal={hori}
       position={posi}

@@ -29,19 +29,7 @@ export const DemoScrollViewIndicator = (props: PropsT) => {
       horizontal={hori}
       position={posi}
       indStyle={indStyle}
-      containerStyle={containerStyle}
-      scrollViewProps={{
-        onLayout: e =>
-          console.log(
-            `scrollViewProps onLayout: ${JSON.stringify(e.nativeEvent.layout)}`,
-          ),
-        onScroll: e =>
-          console.log(
-            `scrollViewProps onScroll: ${JSON.stringify(
-              e.nativeEvent.contentOffset,
-            )}`,
-          ),
-      }}>
+      containerStyle={containerStyle}>
       <View style={{ padding: 10 }}>
         <Text>{text}</Text>
       </View>
