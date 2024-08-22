@@ -10,8 +10,8 @@
  */
 import * as React from 'react';
 import { Text, View, ViewStyle } from 'react-native';
-// import { FlatListIndicator } from '../react-native-scroll-indicator';
-import { FlatListIndicator } from '@fanchenbao/react-native-scroll-indicator';
+import { FlatListIndicator } from '../react-native-scroll-indicator';
+// import { FlatListIndicator } from '@fanchenbao/react-native-scroll-indicator';
 
 type PropsT = {
   hori: boolean;
@@ -44,6 +44,16 @@ export const DemoFlatListIndicator = (props: PropsT) => {
           </View>
         ),
         inverted: inverted,
+        onLayout: e =>
+          console.log(
+            `flatListProps onLayout: ${JSON.stringify(e.nativeEvent.layout)}`,
+          ),
+        onScroll: e =>
+          console.log(
+            `flatlistProps onScroll: ${JSON.stringify(
+              e.nativeEvent.contentOffset,
+            )}`,
+          ),
       }}
       horizontal={hori}
       position={posi}

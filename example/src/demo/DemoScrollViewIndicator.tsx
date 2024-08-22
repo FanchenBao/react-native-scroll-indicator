@@ -10,8 +10,8 @@
  */
 import * as React from 'react';
 import { Text, View, ViewStyle } from 'react-native';
-// import { ScrollViewIndicator } from '../react-native-scroll-indicator';
-import { ScrollViewIndicator } from '@fanchenbao/react-native-scroll-indicator';
+import { ScrollViewIndicator } from '../react-native-scroll-indicator';
+// import { ScrollViewIndicator } from '@fanchenbao/react-native-scroll-indicator';
 
 type PropsT = {
   hori: boolean;
@@ -29,7 +29,19 @@ export const DemoScrollViewIndicator = (props: PropsT) => {
       horizontal={hori}
       position={posi}
       indStyle={indStyle}
-      containerStyle={containerStyle}>
+      containerStyle={containerStyle}
+      scrollViewProps={{
+        onLayout: e =>
+          console.log(
+            `scrollViewProps onLayout: ${JSON.stringify(e.nativeEvent.layout)}`,
+          ),
+        onScroll: e =>
+          console.log(
+            `scrollViewProps onScroll: ${JSON.stringify(
+              e.nativeEvent.contentOffset,
+            )}`,
+          ),
+      }}>
       <View style={{ padding: 10 }}>
         <Text>{text}</Text>
       </View>
