@@ -10,7 +10,6 @@ import {
   FlatListProps,
   ScrollViewProps,
   View,
-  StyleSheet,
   LayoutChangeEvent,
   NativeSyntheticEvent,
   NativeScrollEvent,
@@ -25,6 +24,7 @@ type PropsT = {
   horizontal: boolean; // whether the scrolling direction is horizontal
   persistentScrollbar: boolean; // whether to persist scroll indicator
   indStyle: ViewStyle; // style of the scroll indicator
+  containerStyle: ViewStyle; // style of the parent container that holds both the indicator and the scrollable component
   children?: React.ReactNode | React.ReactNode[]; // used for ScrollView only
 };
 
@@ -36,6 +36,7 @@ export const ScrollIndicator = (props: PropsT) => {
     horizontal,
     persistentScrollbar,
     indStyle,
+    containerStyle,
   } = props;
 
   // total size of the content if rendered
@@ -156,7 +157,7 @@ export const ScrollIndicator = (props: PropsT) => {
   return (
     <View
       ref={parentRef}
-      style={stylles.parentContainer}
+      style={containerStyle}
       onLayout={() => {
         if (parentRef.current) {
           parentRef.current?.measure((_1, _2, _3, _4, pageX, pageY) => {
@@ -176,9 +177,25 @@ export const ScrollIndicator = (props: PropsT) => {
           showsVerticalScrollIndicator={false}
           showsHorizontalScrollIndicator={false}
           onContentSizeChange={configContentSize}
-          onLayout={configVisibleSize}
+          onLayout={e => {
+            configVisibleSize(e);
+            if (
+              'onLayout' in targetProps &&
+              typeof targetProps.onLayout === 'function'
+            ) {
+              targetProps.onLayout(e);
+            }
+          }}
           scrollEventThrottle={16}
-          onScroll={configOnScroll}
+          onScroll={e => {
+            configOnScroll(e);
+            if (
+              'onScroll' in targetProps &&
+              typeof targetProps.onScroll === 'function'
+            ) {
+              targetProps.onScroll(e);
+            }
+          }}
         />
       ) : (
         // The logic for ScrollView is exactly the same as FlatList
@@ -189,9 +206,25 @@ export const ScrollIndicator = (props: PropsT) => {
           showsVerticalScrollIndicator={false}
           showsHorizontalScrollIndicator={false}
           onContentSizeChange={configContentSize}
-          onLayout={configVisibleSize}
+          onLayout={e => {
+            configVisibleSize(e);
+            if (
+              'onLayout' in targetProps &&
+              typeof targetProps.onLayout === 'function'
+            ) {
+              targetProps.onLayout(e);
+            }
+          }}
           scrollEventThrottle={16}
-          onScroll={configOnScroll}>
+          onScroll={e => {
+            configOnScroll(e);
+            if (
+              'onScroll' in targetProps &&
+              typeof targetProps.onScroll === 'function'
+            ) {
+              targetProps.onScroll(e);
+            }
+          }}>
           {props.children}
         </ScrollView>
       )}
@@ -225,9 +258,3 @@ export const ScrollIndicator = (props: PropsT) => {
     </View>
   );
 };
-
-const stylles = StyleSheet.create({
-  parentContainer: {
-    flex: 1,
-  },
-});

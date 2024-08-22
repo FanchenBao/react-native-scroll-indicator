@@ -18,11 +18,12 @@ type PropsT = {
   posi: string | number;
   inverted: boolean;
   indStyle: ViewStyle;
+  containerStyle: ViewStyle;
   data: Array<string>;
 };
 
 export const DemoFlatListIndicator = (props: PropsT) => {
-  const { hori, posi, inverted, indStyle, data } = props;
+  const { hori, posi, inverted, indStyle, containerStyle, data } = props;
 
   return (
     <FlatListIndicator
@@ -47,6 +48,7 @@ export const DemoFlatListIndicator = (props: PropsT) => {
       horizontal={hori}
       position={posi}
       indStyle={indStyle}
+      containerStyle={containerStyle}
     />
   );
 };

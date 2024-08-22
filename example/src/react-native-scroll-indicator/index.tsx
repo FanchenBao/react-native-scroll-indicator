@@ -13,6 +13,7 @@ type ScrollViewPropsT = {
   horizontal?: boolean;
   persistentScrollbar?: boolean;
   indStyle?: ViewStyle;
+  containerStyle?: ViewStyle;
   scrollViewProps?: ScrollViewProps;
   children?: React.ReactNode | React.ReactNode[];
 };
@@ -23,6 +24,7 @@ export const ScrollViewIndicator = (props: ScrollViewPropsT) => {
     horizontal = false,
     persistentScrollbar = false,
     indStyle: { width = 5, ...indStyle } = {},
+    containerStyle = {},
     scrollViewProps = {},
   } = props;
 
@@ -38,7 +40,8 @@ export const ScrollViewIndicator = (props: ScrollViewPropsT) => {
         width,
         borderRadius: (width as number) / 2,
         ...indStyle,
-      }}>
+      }}
+      containerStyle={containerStyle}>
       {props.children}
     </ScrollIndicator>
   );
@@ -50,6 +53,7 @@ type FlatListPropsT = {
   horizontal?: boolean;
   persistentScrollbar?: boolean;
   indStyle?: ViewStyle;
+  containerStyle?: ViewStyle;
 };
 
 export const FlatListIndicator = (props: FlatListPropsT) => {
@@ -59,6 +63,7 @@ export const FlatListIndicator = (props: FlatListPropsT) => {
     horizontal = false,
     persistentScrollbar = false,
     indStyle: { width = 5, ...indStyle } = {},
+    containerStyle = {},
   } = props;
 
   return (
@@ -74,6 +79,7 @@ export const FlatListIndicator = (props: FlatListPropsT) => {
         borderRadius: (width as number) / 2,
         ...indStyle,
       }}
+      containerStyle={containerStyle}
     />
   );
 };

@@ -148,8 +148,7 @@ const App = () => {
         </View>
       </View>
       <View style={styles.contentContainer}>
-        <View
-          style={[styles.scrollViewContainer, { height: hori ? '20%' : '100%' }]}>
+        <>
           {comp === 'ScrollView' ? (
             <DemoScrollViewIndicator
               hori={hori}
@@ -157,6 +156,10 @@ const App = () => {
               indStyle={
                 ind === 'Crazy' ? styles.indStyleCrazy : styles.indStyleNormal
               }
+              containerStyle={{
+                height: hori ? '20%' : '100%',
+                ...styles.scrollContainer,
+              }}
               text={hori ? lorem.text.slice(0, 100) : lorem.text}
             />
           ) : (
@@ -167,10 +170,14 @@ const App = () => {
               indStyle={
                 ind === 'Crazy' ? styles.indStyleCrazy : styles.indStyleNormal
               }
+              containerStyle={{
+                height: hori ? '20%' : '100%',
+                ...styles.scrollContainer,
+              }}
               data={lorem.text.slice(0, hori ? 100 : 800).split('.')}
             />
           )}
-        </View>
+        </>
       </View>
     </View>
   );
@@ -202,7 +209,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 30,
     marginVertical: 30,
   },
-  scrollViewContainer: {
+  scrollContainer: {
     borderWidth: 1,
     borderColor: 'black',
   },
