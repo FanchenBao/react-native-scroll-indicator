@@ -4,12 +4,11 @@
 import * as React from 'react';
 import {
   Animated,
-  ScrollView,
   FlatList,
   ViewStyle,
   FlatListProps,
+  ScrollView,
   ScrollViewProps,
-  View,
   LayoutChangeEvent,
   NativeSyntheticEvent,
   NativeScrollEvent,
@@ -48,15 +47,6 @@ export const ScrollIndicator = (props: PropsT) => {
   // the indicator
   const [orthSize, setOrthSize] = React.useState(0);
 
-  // parent view position. Parent view is the component that holds both the
-  // scroll indicator and the scrollable component
-  const parentRef = React.useRef<View>(null);
-  const [parentPos, setParentPos] = React.useState({
-    pageX: 0,
-    pageY: 0,
-    ready: false,
-  });
-
   // scroll container refs. Use this to manually scroll the scrollable
   // component when dragging the indicator
   const scrollRefs = {
@@ -82,6 +72,13 @@ export const ScrollIndicator = (props: PropsT) => {
   const d = React.useRef(new Animated.Value(0)).current;
   // the scale that the indicator needs to shrink if scrolling beyond the end
   const sc = React.useRef(new Animated.Value(1)).current;
+
+  // Remove parentRef since we're not using View wrapper anymore
+  const [parentPos, setParentPos] = React.useState({
+    pageX: 0,
+    pageY: 0,
+    ready: false,
+  });
 
   /****************************************************
    * Callbacks shared by both Flatlist and Scrollview
@@ -155,20 +152,7 @@ export const ScrollIndicator = (props: PropsT) => {
   };
 
   return (
-    <View
-      ref={parentRef}
-      style={containerStyle}
-      onLayout={() => {
-        if (parentRef.current) {
-          parentRef.current?.measure((_1, _2, _3, _4, pageX, pageY) => {
-            setParentPos({
-              pageX: pageX,
-              pageY: pageY,
-              ready: true,
-            });
-          });
-        }
-      }}>
+    <>
       {target === 'FlatList' ? (
         <FlatList
           {...(targetProps as ScrollViewProps & FlatListProps<any>)}
@@ -177,28 +161,28 @@ export const ScrollIndicator = (props: PropsT) => {
           showsVerticalScrollIndicator={false}
           showsHorizontalScrollIndicator={false}
           onContentSizeChange={configContentSize}
-          onLayout={e => {
+          style={containerStyle}
+          onLayout={(e: LayoutChangeEvent) => {
             configVisibleSize(e);
-            if (
-              'onLayout' in targetProps &&
-              typeof targetProps.onLayout === 'function'
-            ) {
+            const { x, y } = e.nativeEvent.layout;
+            setParentPos({
+              pageX: x,
+              pageY: y,
+              ready: true,
+            });
+            if ('onLayout' in targetProps && typeof targetProps.onLayout === 'function') {
               targetProps.onLayout(e);
             }
           }}
           scrollEventThrottle={16}
-          onScroll={e => {
+          onScroll={(e: NativeSyntheticEvent<NativeScrollEvent>) => {
             configOnScroll(e);
-            if (
-              'onScroll' in targetProps &&
-              typeof targetProps.onScroll === 'function'
-            ) {
+            if ('onScroll' in targetProps && typeof targetProps.onScroll === 'function') {
               targetProps.onScroll(e);
             }
           }}
         />
       ) : (
-        // The logic for ScrollView is exactly the same as FlatList
         <ScrollView
           {...(targetProps as ScrollViewProps)}
           ref={scrollRefs.ScrollView}
@@ -206,22 +190,23 @@ export const ScrollIndicator = (props: PropsT) => {
           showsVerticalScrollIndicator={false}
           showsHorizontalScrollIndicator={false}
           onContentSizeChange={configContentSize}
-          onLayout={e => {
+          style={containerStyle}
+          onLayout={(e: LayoutChangeEvent) => {
             configVisibleSize(e);
-            if (
-              'onLayout' in targetProps &&
-              typeof targetProps.onLayout === 'function'
-            ) {
+            const { x, y } = e.nativeEvent.layout;
+            setParentPos({
+              pageX: x,
+              pageY: y,
+              ready: true,
+            });
+            if ('onLayout' in targetProps && typeof targetProps.onLayout === 'function') {
               targetProps.onLayout(e);
             }
           }}
           scrollEventThrottle={16}
-          onScroll={e => {
+          onScroll={(e: NativeSyntheticEvent<NativeScrollEvent>) => {
             configOnScroll(e);
-            if (
-              'onScroll' in targetProps &&
-              typeof targetProps.onScroll === 'function'
-            ) {
+            if ('onScroll' in targetProps && typeof targetProps.onScroll === 'function') {
               targetProps.onScroll(e);
             }
           }}>
@@ -255,6 +240,6 @@ export const ScrollIndicator = (props: PropsT) => {
           indStyle={indStyle}
         />
       )}
-    </View>
+    </>
   );
 };
