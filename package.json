@@ -1,7 +1,7 @@
 {
   "name": "@fanchenbao/react-native-scroll-indicator",
-  "version": "0.4.0",
-  "description": "A React Native component that offers a customizable scroll indicator for ScrollView and FlatList",
+  "version": "0.5.0",
+  "description": "A React Native component that offers a customizable scroll indicator for ScrollView, FlatList, and FlashList",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
   "types": "lib/typescript/index.d.ts",
@@ -88,12 +88,18 @@
   },
   "peerDependencies": {
     "react": "*",
-    "react-native": "*"
+    "react-native": "*",
+    "@shopify/flash-list": "*"
+  },
+  "peerDependenciesMeta": {
+    "@shopify/flash-list": {
+      "optional": true
+    }
   },
   "engines": {
     "node": ">= 16.0.0"
   },
-  "packageManager": "^yarn@1.22.15",
+  "packageManager": "yarn@1.22.15",
   "jest": {
     "preset": "react-native",
     "modulePathIgnorePatterns": [
