@@ -14,18 +14,23 @@ import {
   NativeSyntheticEvent,
   NativeScrollEvent,
 } from 'react-native';
+// Import FlashList as a type to avoid errors when the package is not installed
+import type { FlashList } from '@shopify/flash-list';
 import { Indicator } from './Indicator';
 import { getLocStyle } from './functions';
 
 type PropsT = {
-  target: 'ScrollView' | 'FlatList';
-  targetProps: ScrollViewProps | (ScrollViewProps & FlatListProps<any>);
+  target: 'ScrollView' | 'FlatList' | 'FlashList';
+  targetProps: ScrollViewProps | (ScrollViewProps & FlatListProps<any>) | any;
   position: string | number; // position of the indicator
   horizontal: boolean; // whether the scrolling direction is horizontal
   persistentScrollbar: boolean; // whether to persist scroll indicator
   indStyle: ViewStyle; // style of the scroll indicator
   containerStyle: ViewStyle; // style of the parent container that holds both the indicator and the scrollable component
   children?: React.ReactNode | React.ReactNode[]; // used for ScrollView only
+  scrollViewRef?: React.RefObject<ScrollView>; // ref to ScrollView component
+  flatListRef?: React.RefObject<FlatList>; // ref to FlatList component
+  flashListRef?: React.RefObject<FlashList<any>>; // ref to FlashList component
 };
 
 export const ScrollIndicator = (props: PropsT) => {
@@ -37,6 +42,9 @@ export const ScrollIndicator = (props: PropsT) => {
     persistentScrollbar,
     indStyle,
     containerStyle,
+    scrollViewRef,
+    flatListRef,
+    flashListRef,
   } = props;
 
   // total size of the content if rendered
@@ -48,9 +56,7 @@ export const ScrollIndicator = (props: PropsT) => {
   // the indicator
   const [orthSize, setOrthSize] = React.useState(0);
 
-  // parent view position. Parent view is the component that holds both the
-  // scroll indicator and the scrollable component
-  const parentRef = React.useRef<View>(null);
+  // Parent position state - we'll set this directly from onLayout
   const [parentPos, setParentPos] = React.useState({
     pageX: 0,
     pageY: 0,
@@ -59,9 +65,17 @@ export const ScrollIndicator = (props: PropsT) => {
 
   // scroll container refs. Use this to manually scroll the scrollable
   // component when dragging the indicator
-  const scrollRefs = {
+  const internalScrollRefs = {
     FlatList: React.useRef<FlatList>(null),
     ScrollView: React.useRef<ScrollView>(null),
+    FlashList: React.useRef<FlashList<any>>(null),
+  };
+
+  // Use the refs passed from props if available, otherwise use internal refs
+  const scrollRefs = {
+    FlatList: flatListRef || internalScrollRefs.FlatList,
+    ScrollView: scrollViewRef || internalScrollRefs.ScrollView,
+    FlashList: flashListRef || internalScrollRefs.FlashList,
   };
 
   // height or width of the indicator, if it is vertical or horizontal,
@@ -154,80 +168,88 @@ export const ScrollIndicator = (props: PropsT) => {
     );
   };
 
+  const renderScrollableComponent = () => {
+    const commonProps = {
+      horizontal: horizontal,
+      showsVerticalScrollIndicator: false,
+      showsHorizontalScrollIndicator: false,
+      onContentSizeChange: configContentSize,
+      onLayout: (e: LayoutChangeEvent) => {
+        configVisibleSize(e);
+        if (
+          'onLayout' in targetProps &&
+          typeof targetProps.onLayout === 'function'
+        ) {
+          targetProps.onLayout(e);
+        }
+      },
+      scrollEventThrottle: 16,
+      onScroll: (e: NativeSyntheticEvent<NativeScrollEvent>) => {
+        configOnScroll(e);
+        if (
+          'onScroll' in targetProps &&
+          typeof targetProps.onScroll === 'function'
+        ) {
+          targetProps.onScroll(e);
+        }
+      },
+    };
+
+    // Dynamic import for FlashList to avoid errors when the package is not installed
+    const FlashListComponent = 
+      target === 'FlashList' ? 
+      require('@shopify/flash-list').FlashList : 
+      null;
+
+    switch (target) {
+      case 'FlatList':
+        return (
+          <FlatList
+            {...(targetProps as ScrollViewProps & FlatListProps<any>)}
+            {...commonProps}
+            ref={scrollRefs.FlatList}
+          />
+        );
+      case 'FlashList':
+        if (!FlashListComponent) {
+          console.warn('FlashList is not available. Make sure @shopify/flash-list is installed.');
+          return null;
+        }
+        return (
+          <FlashListComponent
+            {...targetProps}
+            {...commonProps}
+            ref={scrollRefs.FlashList}
+          />
+        );
+      default: // ScrollView
+        return (
+          <ScrollView
+            {...(targetProps as ScrollViewProps)}
+            {...commonProps}
+            ref={scrollRefs.ScrollView}
+          >
+            {props.children}
+          </ScrollView>
+        );
+    }
+  };
+
+  // Handle container layout to set parent position
+  const handleContainerLayout = (e: LayoutChangeEvent) => {
+    const { x, y } = e.nativeEvent.layout;
+    setParentPos({
+      pageX: x,
+      pageY: y,
+      ready: true,
+    });
+  };
+
   return (
     <View
-      ref={parentRef}
       style={containerStyle}
-      onLayout={() => {
-        if (parentRef.current) {
-          parentRef.current?.measure((_1, _2, _3, _4, pageX, pageY) => {
-            setParentPos({
-              pageX: pageX,
-              pageY: pageY,
-              ready: true,
-            });
-          });
-        }
-      }}>
-      {target === 'FlatList' ? (
-        <FlatList
-          {...(targetProps as ScrollViewProps & FlatListProps<any>)}
-          ref={scrollRefs.FlatList}
-          horizontal={horizontal}
-          showsVerticalScrollIndicator={false}
-          showsHorizontalScrollIndicator={false}
-          onContentSizeChange={configContentSize}
-          onLayout={e => {
-            configVisibleSize(e);
-            if (
-              'onLayout' in targetProps &&
-              typeof targetProps.onLayout === 'function'
-            ) {
-              targetProps.onLayout(e);
-            }
-          }}
-          scrollEventThrottle={16}
-          onScroll={e => {
-            configOnScroll(e);
-            if (
-              'onScroll' in targetProps &&
-              typeof targetProps.onScroll === 'function'
-            ) {
-              targetProps.onScroll(e);
-            }
-          }}
-        />
-      ) : (
-        // The logic for ScrollView is exactly the same as FlatList
-        <ScrollView
-          {...(targetProps as ScrollViewProps)}
-          ref={scrollRefs.ScrollView}
-          horizontal={horizontal}
-          showsVerticalScrollIndicator={false}
-          showsHorizontalScrollIndicator={false}
-          onContentSizeChange={configContentSize}
-          onLayout={e => {
-            configVisibleSize(e);
-            if (
-              'onLayout' in targetProps &&
-              typeof targetProps.onLayout === 'function'
-            ) {
-              targetProps.onLayout(e);
-            }
-          }}
-          scrollEventThrottle={16}
-          onScroll={e => {
-            configOnScroll(e);
-            if (
-              'onScroll' in targetProps &&
-              typeof targetProps.onScroll === 'function'
-            ) {
-              targetProps.onScroll(e);
-            }
-          }}>
-          {props.children}
-        </ScrollView>
-      )}
+      onLayout={handleContainerLayout}>
+      {renderScrollableComponent()}
       {(persistentScrollbar || indSize < visibleSize) && parentPos.ready && (
         <Indicator
           d={d}
@@ -250,7 +272,7 @@ export const ScrollIndicator = (props: PropsT) => {
             horizontal,
             position,
             orthSize,
-            indStyle.width as number,
+            'width' in indStyle ? indStyle.width as number : 5,
           )}
           indStyle={indStyle}
         />
