@@ -1,6 +1,6 @@
 # @fanchenbao/react-native-scroll-indicator
 
-A react-native component that offers a customizable scroll indicator for ScrollView and FlatList
+A react-native component that offers a customizable scroll indicator for ScrollView, FlatList, and FlashList
 
 ## Disclaimer
 
@@ -11,7 +11,7 @@ The idea of animating a scroll indicator in response to the scrolling on a scrol
 If you search for react native scroll indicator on npm, there are more than 10 packages already there. Compared to those, this package has the following advantages:
 
 - Supports:
-  - Both `ScrollView` and `FlatList`
+  - Both `ScrollView`, `FlatList`, and `FlashList`
   - Both vertical and horizontal scrolling
   - Indicator shrinking in iOS when user scrolls beyond the edge
   - `inverted={true}` in `FlatList`
@@ -139,6 +139,59 @@ export default App;
 
 ![Minimal FlatList Demo](./docs/minimal_flatlist.gif)
 
+### FlashListIndicator
+
+```js
+import * as React from 'react';
+import {View, Text} from 'react-native';
+import {FlashListIndicator} from '@fanchenbao/react-native-scroll-indicator';
+
+const App = () => {
+  return (
+    <View
+      style={{
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}
+    >
+      <View
+        style={{
+          height: '10%',
+          width: '80%',
+        }}
+      >
+        <FlashListIndicator
+          flashListProps={{
+            data: [
+              'Druid',
+              'Sorceress',
+              'Paladin',
+              'Barbarian',
+              'Necromancer',
+              'Assassin',
+              'Amazon',
+            ],
+            renderItem: ({item}) => (
+              <View style={{justifyContent: 'center', padding: 10}}>
+                <Text>{item}</Text>
+              </View>
+            ),
+            estimatedItemSize: 50,
+          }}
+          horizontal={true}
+          position="bottom"
+          indStyle={{width: 30}}
+          containerStyle={{borderWidth: 1, borderColor: 'black'}}
+        />
+      </View>
+    </View>
+  );
+};
+
+export default App;
+```
+
 ## Comprehensive Examples
 
 [**Try it on Snack Expo**](https://snack.expo.dev/@fanchenbao/react-native-scroll-indicator_demo)
@@ -197,11 +250,17 @@ The example app is running from [`./example/App.tsx`](./example/App.tsx)
 | indStyle            | ViewStyle                            | `{backgroundColor: 'grey', width: 5}` | Styling of the scroll indicator. The scroll indicator is just an `Animated.View`. Thus, any props that modifies a `View` can potentially modify the appearance of the scroll indicator. Note that `width` refers to the girth of the indicator, which is width in vertical scrolling but height in horizontal scrolling. `borderRadius` value will be derived from the `width` prop to make it round (i.e., half the value of `width`) if not overridden. Please do not assign the following props, as they will be overwritten and won't have any effect: `position`, `height`, `transform`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
 | scrollViewProps     | ScrollViewProps                      | `{}`                                  | `ScrollViewIndicator` only. Props to pass to the underlying `ScrollView`.<br><br>Please do not pass the following props, as they will be overwritten and won't have any effect: `horizontal`, `showsVerticalScrollIndicator`, `showsHorizontalScrollIndicator`, `onContentSizeChange`, `scrollEventThrottle`.<br><br>Note that `onScroll` and `onLayout` are allowed (_updated in v0.4.0_).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
 | flatListProps       | ScrollViewProps & FlatListProps<any> | **required**                          | `FlatListIndicator` only. Props to pass to the underlying `FlatList`. This is a required prop, as one must supply `data` and `renderItem` to `FlatList`. <br><br>Please do not pass the following props, as they will be overwritten and won't have any effect: `horizontal`, `showsVerticalScrollIndicator`, `showsHorizontalScrollIndicator`, `onContentSizeChange`, `scrollEventThrottle`.<br><br>Note that `onScroll` and `onLayout` are allowed (_updated in v0.4.0_).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| flashListProps      | ScrollViewProps & FlashList required props | **required**                     | `FlashListIndicator` only. Props to pass to the underlying `FlashList`. This is a required prop, as one must supply `data`, `renderItem`, and `estimatedItemSize` to `FlashList`. <br><br>Please do not pass the following props, as they will be overwritten and won't have any effect: `horizontal`, `showsVerticalScrollIndicator`, `showsHorizontalScrollIndicator`, `onContentSizeChange`, `scrollEventThrottle`.<br><br>Note that `onScroll` and `onLayout` are allowed.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
 | containerStyle      | ViewStyle                            | `{}`                                  | Styling of the parent container that holds both the scroll indicator and the scrollable component (_updated in v0.4.0_).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| scrollViewRef       | React.RefObject<ScrollView>          | `undefined`                          | `ScrollViewIndicator` only. Ref to the underlying `ScrollView`. This allows you to access the `ScrollView` methods, such as `scrollTo`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| flatListRef         | React.RefObject<FlatList>            | `undefined`                          | `FlatListIndicator` only. Ref to the underlying `FlatList`. This allows you to access the `FlatList` methods, such as `scrollToIndex`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| flashListRef        | React.RefObject<FlashList>           | `undefined`                          | `FlashListIndicator` only. Ref to the underlying `FlashList`. This allows you to access the `FlashList` methods, such as `scrollToIndex`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
 
 ## Limitations
 
-The package is designed to be a substitute of `ScrollView` and `FlatList` under the most basic usage. Thus, despite allowing any props from `ScrollView` and `FlatList` to be passed to `ScrollViewIndicator` and `FlatListIndicator`, the package has NOT been fully tested on the combination of all the props. It is very likely that some prop combinations would break the custom scroll indicator. If that happens, please raise an issue or suggest a feature request on GitHub.
+The package is designed to be a substitute of `ScrollView`, `FlatList`, and `FlashList` under the most basic usage. Thus, despite allowing any props from these components to be passed to `ScrollViewIndicator`, `FlatListIndicator`, and `FlashListIndicator`, the package has NOT been fully tested on the combination of all the props. It is very likely that some prop combinations would break the custom scroll indicator. If that happens, please raise an issue or suggest a feature request on GitHub.
+
+Note that for `FlashListIndicator`, you need to have `@shopify/flash-list` installed in your project, as it is an optional peer dependency.
 
 ## Contributing
 
